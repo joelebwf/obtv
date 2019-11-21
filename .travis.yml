@@ -1,29 +1,29 @@
 matrix:
-  include:
-    - language: python
-      python:
-        - 3.5
-        - 3.6
-        - 3.7
-      install:
-        - pip install -r requirements.txt
-      script:
-        - cd viewer
-        - pytest
-      after_success:
-        - bash <(curl -s https://codecov.io/bash)
-
-# Commented out until python is working.
-#    - language: node_js
-#      node_js:
-#        - 10.6.0
-#      before_install:
-#        - cd web/
+# Commented out python to get node.js working
+#  include:
+#    - language: python
+#      python:
+#        - 3.5
+#        - 3.6
+#        - 3.7
 #      install:
-#        - npm install jest --global
-#        - npm install
+#        - pip install -r requirements.txt
 #      script:
-#        - jest
+#        - cd viewer
+#        - pytest
+#      after_success:
+#        - bash <(curl -s https://codecov.io/bash)
+
+    - language: node_js
+      node_js:
+        - 10.6.0
+      before_install:
+        - cd web/
+      install:
+        - npm install jest --global
+        - npm install
+      script:
+        - jest
 
 notifications:
   slack:

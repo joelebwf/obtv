@@ -13,6 +13,7 @@ matrix:
       after_success:
         - bash <(curl -s https://codecov.io/bash)
 
+# Commented out until python is working.
 #    - language: node_js
 #      node_js:
 #        - 10.6.0

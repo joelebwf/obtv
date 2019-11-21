@@ -47,6 +47,9 @@ export default {
     returnItemsCount() {
       return this.$store.state.returnItemsCount;
     }
+  },
+  created () {
+      this.message = 'bye!'
   }
 };
 </script>

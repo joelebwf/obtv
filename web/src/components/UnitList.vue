@@ -98,6 +98,7 @@ export default {
        //return this.$store.state.apiData;
 
        return this.$store.state.apiData.filter( node => {
+
             return node.id.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
               ((node.standard.toLowerCase()=="customary" && this.$store.state.chkCustomary) ||
                (node.standard.toLowerCase()=="iso4217" && this.$store.state.chkISO4217) ||

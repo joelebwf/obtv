@@ -59,7 +59,5 @@
         </p>
 
     </center>
-
-    </center>
   </div>
 </template>

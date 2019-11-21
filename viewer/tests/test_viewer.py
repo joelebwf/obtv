@@ -18,14 +18,14 @@ class TestViewer(unittest.TestCase):
 
     def test_entrypoints(self):
         data = json.loads(viewer.entrypoints())
-        self.assertEqual(160, len(data))
+        self.assertEqual(161, len(data))
         self.assertTrue("entrypoint" in data[0])
         self.assertTrue("type" in data[0])
         self.assertTrue("description" in data[0])
 
     def test_concepts(self):
         data = json.loads(viewer.concepts())
-        self.assertEqual(3333, len(data))
+        self.assertEqual(3404, len(data))
         self.assertTrue("name" in data[0])
         self.assertTrue("taxonomy" in data[0])
         self.assertTrue("datatype" in data[0])

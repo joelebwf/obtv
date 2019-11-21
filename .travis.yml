@@ -1,18 +1,17 @@
 matrix:
-# Commented out python to get node.js working
-#  include:
-#    - language: python
-#      python:
-#        - 3.5
-#        - 3.6
-#        - 3.7
-#      install:
-#        - pip install -r requirements.txt
-#      script:
-#        - cd viewer
-#        - pytest
-#      after_success:
-#        - bash <(curl -s https://codecov.io/bash)
+  include:
+    - language: python
+      python:
+        - 3.5
+        - 3.6
+        - 3.7
+      install:
+        - pip install -r requirements.txt
+      script:
+        - cd viewer
+        - pytest
+      after_success:
+        - bash <(curl -s https://codecov.io/bash)
 
     - language: node_js
       node_js:

@@ -13,27 +13,27 @@
 -->
 
 <template>
-  <div class="unit-public-list-container">
-    <div class="unit-public-list">
-      <b-table
-        class="unit-table"
-        striped
-        hover
-        outlined
-        small
-        :fields="fields"
-        :items="searchFilter"
-        :busy="apiLoading"
-      >
-        <template v-slot:table-busy>
-          <div class="text-center text-primary my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong>&nbsp; Loading...</strong>
-          </div>
-        </template>
-      </b-table>
+    <div class="unit-public-list-container">
+        <div class="unit-public-list">
+            <b-table
+                    class="unit-table"
+                    striped
+                    hover
+                    outlined
+                    small
+                    :fields="fields"
+                    :items="searchFilter"
+                    :busy="apiLoading"
+            >
+                <template v-slot:table-busy>
+                    <div class="text-center text-primary my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong>&nbsp; Loading...</strong>
+                    </div>
+                </template>
+            </b-table>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -93,10 +93,7 @@ export default {
     dataReady() {
       return this.$store.state.dataReady;
     },
-     searchFilter() {
-
-       //return this.$store.state.apiData;
-
+    searchFilter() {
        return this.$store.state.apiData.filter( node => {
 
             return node.id.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
@@ -112,6 +109,7 @@ export default {
   components: {
   }
 };
+
 </script>
 
 <style>
@@ -252,4 +250,5 @@ a {
 .table {
   margin-bottom: 0px !important;
 }
+
 </style>

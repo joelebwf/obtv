@@ -13,31 +13,31 @@
 -->
 
 <template>
-  <div class="concept-public-list-container">
-    <div class="concept-public-list">
-      <b-table
-        class="concept-table"
-        primary-key="name"
-        striped
-        hover
-        outlined
-        small
-        :fields="fields"
-        :items="searchFilter"
-        :busy="apiLoading"
-      >
-        <!-- :items="json" -->
-        <!-- :items="apiData.results" -->
+    <div class="concept-public-list-container">
+        <div class="concept-public-list">
+            <b-table
+                    class="concept-table"
+                    primary-key="name"
+                    striped
+                    hover
+                    outlined
+                    small
+                    :fields="fields"
+                    :items="searchFilter"
+                    :busy="apiLoading"
+            >
+                <!-- :items="json" -->
+                <!-- :items="apiData.results" -->
 
-        <template v-slot:table-busy>
-          <div class="text-center text-primary my-2">
-            <b-spinner class="align-middle"></b-spinner>
-            <strong>&nbsp; Loading...</strong>
-          </div>
-        </template>
-      </b-table>
+                <template v-slot:table-busy>
+                    <div class="text-center text-primary my-2">
+                        <b-spinner class="align-middle"></b-spinner>
+                        <strong>&nbsp; Loading...</strong>
+                    </div>
+                </template>
+            </b-table>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -89,9 +89,6 @@ export default {
       return this.$store.state.dataReady;
     },
     searchFilter() {
-
-      //return this.$store.state.apiData;
-
       return this.$store.state.apiData.filter( node => {
           return node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
             ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
@@ -106,6 +103,7 @@ export default {
   components: {
   }
 };
+
 </script>
 
 <style>
@@ -246,4 +244,5 @@ a {
 .table {
   margin-bottom: 0px !important;
 }
+
 </style>

@@ -13,103 +13,59 @@
 -->
 
 <template>
-  <div class="public-filter">
-    <form @submit.prevent>
-      <h1>Keyword</h1>
-      <div class="form-group">
-        <input
-          type="text"
-          class="form-control"
-          id="keyword_search"
-          v-model="$store.state.searchTerm"
-          @keyup.enter="updateQuery"
-        />
-      </div>
+    <div class="public-filter">
+        <form @submit.prevent>
+            <h1>Keyword</h1>
+            <div class="form-group">
+                <input
+                        type="text"
+                        class="form-control"
+                        id="keyword_search"
+                        v-model="$store.state.searchTerm"
+                        @keyup.enter="updateQuery"
+                />
+            </div>
 
-      <h1>Concept Type</h1>
-      <div class="form-group">
-        <label for="data">
-          <input type="checkbox" id="solar" value="Solar" v-model="$store.state.chkSolar" /> Solar
-        </label>
-        <label for="documents">
-          <input type="checkbox" id="usgaap" value="USGaap" v-model="$store.state.chkUSGaap" /> US-Gaap
-        </label>
-        <label for="process">
-          <input type="checkbox" id="dei" value="DEI" v-model="$store.state.chkDEI" /> DEI
-        </label>
-      </div>
-      <div class="button-group">
-        <button type="button" class="btn btn-primary" @click="updateQuery">
-          <v-icon name="search" class="search-icon" />&nbsp; Search
-        </button>
-        <button type="button" class="btn btn-primary" @click="clearFilters">
-          <v-icon name="times" class="clear-icon" />&nbsp;&nbsp;Clear filters
-        </button>
-      </div>
-    </form>
-  </div>
+            <h1>Concept Type</h1>
+            <div class="form-group">
+                <label for="data">
+                    <input type="checkbox" id="solar" value="Solar" v-model="$store.state.chkSolar"/> Solar
+                </label>
+                <label for="documents">
+                    <input type="checkbox" id="usgaap" value="USGaap" v-model="$store.state.chkUSGaap"/> US-Gaap
+                </label>
+                <label for="process">
+                    <input type="checkbox" id="dei" value="DEI" v-model="$store.state.chkDEI"/> DEI
+                </label>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" @click="updateQuery">
+                    <v-icon name="search" class="search-icon"/>&nbsp; Search
+                </button>
+                <button type="button" class="btn btn-primary" @click="clearFilters">
+                    <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
+                </button>
+            </div>
+        </form>
+    </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      query_data: {
-        ConceptType: [],
-        ConceptRegion: [],
-        ConceptCertificationType: []
-      },
-      search_string: ""
-    };
-  },
   methods: {
     updateQuery() {
-      this.$store.commit("toggleAPILoading");
-      // console.log(this.query_data);
-      let query_search_string = "";
-      if (this.search_string) {
-        query_search_string = "search=" + this.search_string;
-      }
-
-      let query_string = "?";
-      Object.keys(this.query_data).forEach(key => {
-        if (this.query_data[key].length != 0) {
-          if (query_string == "?") {
-            query_string += key + "__in=";
-          } else {
-            query_string += "&" + key + "__in=";
-          }
-          for (let i in this.query_data[key]) {
-            query_string += this.query_data[key][i] + ",";
-          }
-          query_string = query_string.slice(0, -1);
-        }
-      });
-
-      if (query_string == "?") {
-        query_string = query_string + query_search_string;
-      } else {
-        query_string = query_string + "&" + query_search_string;
-      }
-      // console.log(query_string);
-      this.$store.commit("callAPI", query_string);
+       // TODO: Remove - currently referenced in other code.
     },
     clearFilters() {
       this.$store.commit("toggleAPILoading");
       this.search_string = "";
       this.$store.commit("clearQueryString");
-      this.$store.commit("clearConceptsChks")
+      this.$store.commit("clearConceptsChks");
       this.$store.commit("callAPI", "concepts");
-    },
-    updateSearch() {
-      this.$store.commit("toggleAPILoading");
-
-      let query_search_string = "?search=" + this.search_string;
-      // console.log(query_search_string);
-      this.$store.commit("callAPI", query_search_string);
     }
   }
 };
+
 </script>
 
 <style scoped>
@@ -180,4 +136,5 @@ label {
 #keyword_search {
   width: 214px;
 }
+
 </style>

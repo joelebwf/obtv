@@ -17,38 +17,60 @@ import TypeFilter from "@/components/TypeFilter.vue"
 import TypeList from "@/components/TypeList.vue"
 import store from "@/store.js"
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
+const localVue = createLocalVue();
+localVue.use(Vuex);
+
+process.env.TEST_JSON = `[
+    {"code": "fundStatus", "type": "Non numeric", "values": "Closed, Open, Committed"},
+    {"code": "force", "type": "Numeric", "values": "N/A"}
+]`;
 
 describe('TypesPage', () => {
 
   it('renders a correct markup clip', () => {
-    const wrapper = shallowMount(TypesPage, { store, localVue })
-    expect(wrapper.html()).toContain('Download Search Results')
-  })
+    const wrapper = shallowMount(TypesPage, { store, localVue });
+    expect(wrapper.html()).toContain('Download Search Results');
+  });
 
-})
+  it('sets the computed count correctly', () => {
+    const wrapper = shallowMount(TypesPage, {store, localVue});
+    wrapper.vm.$store.state.returnItemsCount = 10;
+    expect(wrapper.vm.returnItemsCount).toBe(10);
+  });
+
+});
 
 describe('TypeFilter', () => {
 
   it('renders a correct markup clip', () => {
-    const wrapper = shallowMount(TypeFilter, {store, localVue})
-    expect(wrapper.html()).toContain('numeric')
-  })
+    const wrapper = shallowMount(TypeFilter, {store, localVue});
+    expect(wrapper.html()).toContain('numeric');
+  });
 
   it('clears all filters on clearFilters()', () => {
-    const wrapper = shallowMount(TypeFilter, {store, localVue})
+    const wrapper = shallowMount(TypeFilter, {store, localVue});
     wrapper.vm.clearFilters();
     let result = wrapper.vm.$store.state.chkNumeric || wrapper.vm.$store.state.chkNonNumeric ||
         wrapper.vm.search_string != "";
     expect(result).toBe(false);
-   })
-})
+   });
+});
 
 describe('TypeList', () => {
 
   it('renders a correct markup clip', () => {
-    const wrapper = shallowMount(TypeList, {store, localVue})
-    expect(wrapper.html()).toContain('type-public-list-container')
-  })
-})
+    const wrapper = shallowMount(TypeList, {store, localVue});
+    expect(wrapper.html()).toContain('type-public-list-container');
+  });
+
+  it('loads the mock JSON correctly', () => {
+    const wrapper = shallowMount(TypeList, {store, localVue});
+    expect(wrapper.vm.$store.state.returnItemsCount).toBe(2);
+    expect(wrapper.vm.apiData[0]["code"]).toBe("fundStatus");
+    expect(wrapper.vm.apiData[1]["type"]).toBe("Numeric");
+    expect(wrapper.vm.apiData[0]["values"]).toBe("Closed, Open, Committed");
+    expect(wrapper.vm.apiLoading).toBe(false);
+    expect(wrapper.vm.dataReady).toBe(true);
+  });
+
+});

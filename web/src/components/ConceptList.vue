@@ -25,9 +25,11 @@
                     :fields="fields"
                     :items="apiData"
                     :busy="apiLoading"
+                    @row-clicked="rowClickHandler"
             >
                 <!-- :items="json" -->
                 <!-- :items="apiData.results" -->
+
 
                 <template v-slot:table-busy>
                     <div class="text-center text-primary my-2">
@@ -114,6 +116,11 @@ export default {
     }
   },
   methods: {
+    rowClickHandler(rowDetails) {
+        console.log(rowDetails["name"], rowDetails["taxonomy"]);
+        this.$store.commit("callAPIdetail", ["conceptdetail", rowDetails["name"], rowDetails["taxonomy"]]);
+        this.$store.state.conceptDetail = rowDetails["name"];
+    },
     loadMore() {
       this.numOfElem += 100;
       if (this.numOfElem >= this.$store.state.returnItemsCount

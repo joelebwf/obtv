@@ -21,6 +21,7 @@ Use the following comand to start the Viewer.
 """
 
 import reference
+import relationships
 
 import json
 import re
@@ -406,6 +407,20 @@ def concept_detail(concept, taxonomy):
         }
 
         s = json.dumps(data)
+        return s
+
+    except Exception as e:
+        print(e)
+        return "Error occurred - try again"
+
+
+@app.route('/entrypointdetail/<entrypoint>/undefined', methods=['GET'])
+def entrypoint_detail(entrypoint):
+
+    print("Entrypoint detail endpoint")
+
+    try:
+        s = json.dumps(relationships.create_json(entrypoint))
         return s
 
     except Exception as e:

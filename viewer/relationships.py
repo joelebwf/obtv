@@ -1,3 +1,19 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#    http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""
+Builds JSON relationships which can be returned by the viewer to OBTV.
+"""
+
 from oblib import taxonomy
 from dataclasses import dataclass
 from typing import List
@@ -208,21 +224,3 @@ def subprocess(a, level, j):
                 jj = {}
                 subprocess(c, level+1, jj)
                 j["children"].append(jj)
-
-    # if a.tables:
-    #     for t in a.tables:
-    #         TreeVRepresentation.start_table(out, t.name, level)
-    #         data = []
-    #         for pk in t.pks:
-    #             data.append(pk + " (PK)")
-    #         for member in t.members:
-    #             data.append(member)
-    #         TreeVRepresentation.end_table(out, data, t.pk_values_enum)
-    #         if t.children:
-    #             for c in t.children:
-    #                 TreeVRepresentation.subprocess(c, level+1, out)
-    # if a.children:
-    #     for c in a.children:
-    #         if c is not None:
-    #             TreeVRepresentation.subprocess(c, level+1, out)
-    # TreeVRepresentation.end_list(out)

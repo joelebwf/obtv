@@ -95,8 +95,10 @@ export default {
           return node.code.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
             ((node.type.toLowerCase()=="non numeric" && this.$store.state.chkNonnumeric) ||
              (node.type.toLowerCase()=="numeric" && this.$store.state.chkNumeric) ||
+             (node.type.toLowerCase()=="other" && this.$store.state.chkOther) ||
              (node.type.toLowerCase()=="non numeric" && !this.$store.state.actvChk) ||
-             (node.type.toLowerCase()=="numeric" && !this.$store.state.actvChk))
+             (node.type.toLowerCase()=="numeric" && !this.$store.state.actvChk) ||
+             (node.type.toLowerCase()=="other" && !this.$store.state.actvChk))
       })
       this.numOfElem = 100
       this.showLoadMore = true
@@ -134,6 +136,13 @@ export default {
     },
     "$store.state.chkNumeric"() {
       if (this.$store.state.chkNumeric) {
+        this.$store.state.actvChk = true
+      } else {
+        this.$store.state.actvChk = false
+      }
+    },
+    "$store.state.chkOther"() {
+      if (this.$store.state.chkOther) {
         this.$store.state.actvChk = true
       } else {
         this.$store.state.actvChk = false

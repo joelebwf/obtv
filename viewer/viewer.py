@@ -213,30 +213,39 @@ def types():
 
     try:
         data = []
-        for type in tax.types.get_all_types():
 
-            values = ""
-            first = True
-            for e in tax.types.get_type_enum(type):
-                if not first:
-                    values += ", "
-                first = False
-                values += e
+        types = tax.types.get_all_types()
+        numeric_types = tax.numeric_types.get_all_numeric_types()
 
-            data.append({
-                "code": type.replace("solar-types:", "").replace("ItemType", ""),
-                "type": "Non numeric",
-                "values": values,
-                "definition": ""
-            })
-
-        for numeric_type in tax.numeric_types.get_all_numeric_types():
-            data.append({
-                "code": numeric_type.replace("num-us:", ""),
-                "type": "Numeric",
-                "values": "N/A",
-                "definition": ""
-            })
+        for name in tax.semantic.get_all_type_names():
+            if name in types:
+                values = ""
+                first = True
+                for e in tax.types.get_type_enum(name):
+                    if not first:
+                        values += ", "
+                    first = False
+                    values += e
+                data.append({
+                    "code": name.replace("solar-types:", "").replace("ItemType", ""),
+                    "type": "Non numeric",
+                    "values": values,
+                    "definition": ""
+                })
+            elif name in numeric_types:
+                data.append({
+                    "code": name.replace("num-us:", ""),
+                    "type": "Numeric",
+                    "values": "N/A",
+                    "definition": ""
+                })
+            else:
+                data.append({
+                    "code": name.split(":")[1].replace("ItemType", ""),
+                    "type": "Other",
+                    "values": "N/A",
+                    "definition": ""
+                })
         s = json.dumps(data)
         return s
     except Exception as e:

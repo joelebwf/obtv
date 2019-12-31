@@ -33,7 +33,7 @@ class TestViewer(unittest.TestCase):
 
     def test_types(self):
         data = json.loads(viewer.types())
-        self.assertEqual(80, len(data))
+        self.assertEqual(92, len(data))
         self.assertTrue("code" in data[0])
         self.assertTrue("type" in data[0])
         self.assertTrue("values" in data[0])

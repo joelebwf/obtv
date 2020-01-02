@@ -94,10 +94,10 @@ export default {
       let tableData = this.$store.state.apiData.filter( node => {
           return node.entrypoint.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
             ((node.type.toLowerCase()=="data" && this.$store.state.chkData) ||
-             (node.type.toLowerCase()=="document" && this.$store.state.chkDocuments) ||
+             (node.type.toLowerCase()=="documents" && this.$store.state.chkDocuments) ||
              (node.type.toLowerCase()=="process" && this.$store.state.chkProcess) ||
              (node.type.toLowerCase()=="data" && !this.$store.state.actvChk) ||
-             (node.type.toLowerCase()=="document" && !this.$store.state.actvChk) ||
+             (node.type.toLowerCase()=="documents" && !this.$store.state.actvChk) ||
              (node.type.toLowerCase()=="process" && !this.$store.state.actvChk))
       });
       this.numOfElem = 100

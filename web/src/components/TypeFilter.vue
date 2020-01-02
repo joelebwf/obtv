@@ -26,7 +26,7 @@
                 />
             </div>
 
-            <h1>Type Type</h1>
+            <h1>Type</h1>
             <div class="form-group">
                 <label for="nonnumeric">
                     <input type="checkbox" id="nonnumeric" value="NonNumeric" v-model="$store.state.chkNonnumeric"/> Non
@@ -34,6 +34,9 @@
                 </label>
                 <label for="numeric">
                     <input type="checkbox" id="numeric" value="Numeric" v-model="$store.state.chkNumeric"/> Numeric
+                </label>
+                <label for="other">
+                    <input type="checkbox" id="other" value="Other" v-model="$store.state.chkOther"/> Other
                 </label>
             </div>
             <div class="button-group">

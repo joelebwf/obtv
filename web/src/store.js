@@ -45,6 +45,7 @@ export default new Vuex.Store({
 
     chkNonnumeric: false,
     chkNumeric: false,
+    chkOther: false,
 
     chkAcronym: true,
     chkAbbreviation: true,
@@ -142,6 +143,7 @@ export default new Vuex.Store({
     clearTypesChks(state) {
       state.chkNonnumeric = false;
       state.chkNumeric = false;
+      state.chkOther = false;
     },
     clearUnitsChks(state) {
       state.chkCustomary = false;

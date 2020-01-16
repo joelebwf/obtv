@@ -177,26 +177,11 @@ def entrypoints():
     """Flask Read Handler for entrypoints API endpoint"""
 
     data = []
-    for ep in tax.semantic.get_all_entrypoints():
-        t = ""
-        if ep in ["AssetManager", "Developer", "Entity", "FinanicalPerformance", "Fund", "Insurance",
-                  "OperationalPerformance", "OperationsManager", "Portfolio", "Project", "Site", "Sponsor",
-                  "System", "SystemDeviceListing", "Utility"]:
-            t = "Data"
-        elif ep == "ProjectFinancing":
-            t = "Process"
-        else:
-            t = "Document"
-        description = "This schema contains the entry point for the " + ep
-
-        concepts = tax.semantic.get_entrypoint_concepts(ep)
-        if len(concepts) > 0:
-            description = tax.documentation.get_concept_documentation(concepts[0])
-
+    for item in tax.semantic.get_all_entrypoints(details=True)[1].items():
         data.append({
-            "entrypoint": ep,
-            "type": t,
-            "description": description
+            "entrypoint": item[1].name,
+            "type": item[1].entrypoint_type.value,
+            "description": item[1].description
         })
 
     return jsonify(data)
@@ -268,17 +253,9 @@ def concept_detail(concept, taxonomy):
     else:
         precision_decimals= "N/A (neither precision nor decimals may be specified)"
 
-    units = []
-    if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
-        if details.type_name in ["num:percentItemType"]:
-            units.append("pure")
-        else:
-            for unit in tax.units.get_all_units():
-                ud = tax.units.get_unit(unit)
-                if details.type_name.lower().find(ud.item_type.lower()) != -1:
-                    units.append(ud.unit_name)
-    else:
-        units.append("N/A (units may not be specified)</li>\n")
+    units = tax.get_concept_units(concept)
+    if not units:
+        units = ["N/A (units are not specified)"]
 
     period = details.period_type.value
     if period == "instant":
@@ -287,11 +264,21 @@ def concept_detail(concept, taxonomy):
         period = "Period of time"
     nillable = details.nillable
 
-    # TODO: Either find out how to calculate this or remove Calculations
-    if concept == "us-gaap:Revenues":
-        calc = "Other Income + RebateRevenue + PeformanceBasedIncentiveRevenue + Electrical Generation Revenue = Revenues"
+    calculations = tax.semantic.get_concept_calculation(concept)
+    if len(calculations)==0:
+        calc = ["N/A"]
     else:
-        calc = "N/A"
+        calc = []
+        for calculation in calculations:
+            if calculation[1] == 1:
+                sign = "+"
+            else:
+                sign = "-"
+            calc.append(sign + " " + calculation[0])
+
+    usages = tax.semantic.get_concept_calculated_usage(concept)
+    if len(usages) == 0:
+        usages = ["None"]
 
     data = {
         "label": label,
@@ -304,7 +291,8 @@ def concept_detail(concept, taxonomy):
         "units": units,
         "period": period,
         "nillable": nillable,
-        "calculations": calc
+        "calculations": calc,
+        "usages": usages
     }
 
     return jsonify(data)

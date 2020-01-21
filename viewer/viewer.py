@@ -27,8 +27,8 @@ import json
 import re
 
 import werkzeug
-from oblib import taxonomy, data_model, parser
-from flask import Flask, request, render_template, make_response, jsonify
+from oblib import taxonomy
+from flask import Flask, make_response, jsonify
 from flask_cors import CORS
 
 RETURN_INDEX = "<h2><a href='/html'>Return to search page</a></h2>"
@@ -103,7 +103,7 @@ def concepts():
             data.append({
                 "name": details.name,
                 "taxonomy": t,
-                "datatype": details.type_name.split(":")[1].replace("ItemType", ""),
+                "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
                 "period": details.period_type.value
             })
 
@@ -150,21 +150,21 @@ def types():
                 values += e
             data.append({
                 "code": name.replace("solar-types:", "").replace("ItemType", ""),
-                "type": "Non numeric",
+                "type": reference.TYPE_MAPPINGS[name.split(":")[0]],
                 "values": values,
                 "definition": ""
             })
         elif name in numeric_types:
             data.append({
                 "code": name.replace("num-us:", ""),
-                "type": "Numeric",
+                "type": reference.TYPE_MAPPINGS[name.split(":")[0]],
                 "values": "N/A",
                 "definition": ""
             })
         else:
             data.append({
                 "code": name.split(":")[1].replace("ItemType", ""),
-                "type": "Other",
+                "type": reference.TYPE_MAPPINGS[name.split(":")[0]],
                 "values": "N/A",
                 "definition": ""
             })

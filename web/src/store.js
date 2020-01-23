@@ -79,7 +79,7 @@ export default new Vuex.Store({
           // would be better) and hopefully improvements can be applied later.
 
           axios
-              .get(state.apiURL + payload + "/", {
+              .get(state.apiURL + payload, {
               })
               .then(response => {
                 state.apiLoading = false;
@@ -153,7 +153,7 @@ export default new Vuex.Store({
       state.chkSI = false;
       state.chkNonSI = false;
     },
-    clearReferencesChks(state) {
+    clearGlossaryChks(state) {
       state.chkAcronym = false;
       state.chkAbbreviation = false;
     }

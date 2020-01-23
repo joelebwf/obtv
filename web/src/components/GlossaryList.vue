@@ -13,10 +13,10 @@
 -->
 
 <template>
-    <div class="reference-public-list-container">
-        <div class="reference-public-list">
+    <div class="glossary-public-list-container">
+        <div class="glossary-public-list">
             <b-table
-                    class="reference-table"
+                    class="glossary-table"
                     striped
                     hover
                     outlined
@@ -71,11 +71,11 @@ export default {
   beforeCreate() {
     this.$store.state.actvChk = false;
     this.$store.state.searchTerm = "";
-    this.$store.commit("callAPI", "references/");
+    this.$store.commit("callAPI", "glossary/");
   },
   computed: {
     apiData() {
-      // console.log("Reference List API DATA:");
+      // console.log("Glossary List API DATA:");
       // console.log(this.$store.state.apiData);
       return this.searchFilter.slice(0, this.numOfElem);
     },
@@ -94,7 +94,7 @@ export default {
              (node.type.toLowerCase()=="abbreviation" && !this.$store.state.actvChk))
       });
       this.$store.state.returnItemsCount = tableData.length;
-      
+
       if (this.numOfElem + 1 >= this.$store.state.returnItemsCount) {
         this.showLoadMore = false
       } else {
@@ -152,7 +152,7 @@ export default {
 .btn {
   margin: 5px;
 }
-.reference-public-list-container {
+.glossary-public-list-container {
   display: grid;
   grid-template-rows: 50px 720px 50px;
   grid-template-columns: auto;
@@ -196,7 +196,7 @@ ul {
   grid-column: 2 / 3;
 }
 
-.reference-public-list {
+.glossary-public-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -270,11 +270,11 @@ a {
   color: #1d4679;
 }
 
-.reference-table {
+.glossary-table {
   margin-left: 0px;
 }
 
-.reference-code-field-col {
+.glossary-code-field-col {
   width: 400px;
   text-align: center;
 }

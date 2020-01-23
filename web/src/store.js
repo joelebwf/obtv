@@ -153,7 +153,7 @@ export default new Vuex.Store({
       state.chkSI = false;
       state.chkNonSI = false;
     },
-    clearReferencesChks(state) {
+    clearGlossaryChks(state) {
       state.chkAcronym = false;
       state.chkAbbreviation = false;
     }

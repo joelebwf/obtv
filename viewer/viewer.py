@@ -87,25 +87,46 @@ def exception(e):
         return response
 
 
-@app.route('/concepts/', methods=['GET'])
-def concepts():
+@app.route('/concepts/<entrypoint>', methods=['GET'])
+def concepts(entrypoint):
     """Flask Read Handler for concepts API Endpoint"""
 
-    data = []
-    for concept in tax.semantic.get_all_concepts(details=True):
-        details = tax.semantic.get_concept_details(concept)
-        if not details.abstract:
-            t = "SOLAR"
-            if details.id.startswith("us-gaap:"):
-                t = "US-GAAP"
-            elif details.id.startswith("dei:"):
-                t = "DEI"
-            data.append({
-                "name": details.name,
-                "taxonomy": t,
-                "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                "period": details.period_type.value
-            })
+    if entrypoint == "none":
+        data = []
+        for concept in tax.semantic.get_all_concepts(details=True):
+            details = tax.semantic.get_concept_details(concept)
+            if not details.abstract:
+                t = "SOLAR"
+                if details.id.startswith("us-gaap:"):
+                    t = "US-GAAP"
+                elif details.id.startswith("dei:"):
+                    t = "DEI"
+                data.append({
+                    "name": details.name,
+                    "taxonomy": t,
+                    "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
+                    "period": details.period_type.value
+                })
+    else:
+        data = []
+        entrypoint_concepts = []
+        for concept in tax.semantic.get_entrypoint_concepts(entrypoint):
+            entrypoint_concepts.append(concept)
+        for concept in tax.semantic.get_all_concepts(details=True):
+            if concept in entrypoint_concepts:
+                details = tax.semantic.get_concept_details(concept)
+                if not details.abstract:
+                    t = "SOLAR"
+                    if details.id.startswith("us-gaap:"):
+                        t = "US-GAAP"
+                    elif details.id.startswith("dei:"):
+                        t = "DEI"
+                    data.append({
+                        "name": details.name,
+                        "taxonomy": t,
+                        "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
+                        "period": details.period_type.value
+                    })
 
     return jsonify(data)
 
@@ -176,20 +197,32 @@ def types():
 def entrypoints():
     """Flask Read Handler for entrypoints API endpoint"""
 
+    # TODO: This code is a workaround for an issue in solar-taxonomy (and perhaps pyoblib) that
+    # the Monitoring Entrypoint has not metadata.  Thus there is one extra entrypoint in the non-detailed
+    # list which must (at least until the next taxonomy release) be included.  After this occurs the code
+    # can be shortened to just use entrypoint_details.
     data = []
-    for item in tax.semantic.get_all_entrypoints(details=True)[1].items():
-        data.append({
-            "entrypoint": item[1].name,
-            "type": item[1].entrypoint_type.value,
-            "description": item[1].description
-        })
+    entrypoints, entrypoints_details = tax.semantic.get_all_entrypoints(details=True)
+    for entrypoint in entrypoints:
+        if entrypoint in entrypoints_details:
+            data.append({
+                "entrypoint": entrypoints_details[entrypoint].name,
+                "type": entrypoints_details[entrypoint].entrypoint_type.value,
+                "description": entrypoints_details[entrypoint].description
+            })
+        else:
+            data.append({
+                "entrypoint": entrypoint,
+                "type": "Documents",
+                "description": "None"
+            })
 
     return jsonify(data)
 
 
-@app.route('/references/', methods=['GET'])
-def references():
-    """Flask Read Handler for types API Endpoint"""
+@app.route('/glossary/', methods=['GET'])
+def glossary():
+    """Flask Read Handler for glossary API Endpoint"""
 
     data = []
     for item in reference.ACRONYMS.items():

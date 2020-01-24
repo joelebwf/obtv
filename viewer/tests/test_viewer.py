@@ -27,10 +27,14 @@ class TestViewer(TestCase):
 
     def test_entrypoints(self):
         data = json.loads(viewer.entrypoints().data.decode('UTF-8'))
-        self.assertEqual(159, len(data))
+        self.assertEqual(161, len(data))
         self.assertTrue("entrypoint" in data[0])
         self.assertTrue("type" in data[0])
         self.assertTrue("description" in data[0])
+
+    def test_site_entrypoint_detail(self):
+        data = json.loads(viewer.entrypoint_detail("Site").data.decode('UTF-8'))
+        self.assertIsNotNone(data)
 
     def test_concepts(self):
 

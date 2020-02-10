@@ -22,6 +22,7 @@ import unitsJson from '../resources/units.json'
 import referencesJson from '../resources/references.json'
 import entrypointsDetailsJson from '../resources/entrypoints-details.json'
 import conceptsDetailsJson from '../resources/concepts-details.json'
+import entrypointConceptsJson from '../resources/entrypoints-concepts.json'
 
 Vue.use(Vuex);
 
@@ -38,6 +39,8 @@ export default new Vuex.Store({
     apiDetailData: {},
     apiDetailLoading: false,
     apiDetailDataReady: false,
+
+    entryPointList: [],
 
     chkDocuments: true,
     chkData: true,
@@ -89,19 +92,36 @@ export default new Vuex.Store({
 
                if (entrypointsJson.length > 0){
                     // This will be encountered if the system was built with static pages (otherwise
-                     if (payload == "entrypoints") {
+                     if (payload.startsWith("entrypoints")) {
                         state.apiData = entrypointsJson;
                         state.returnItemsCount = entrypointsJson.length;
-                      } else if (payload == "concepts") {
-                        state.apiData = conceptsJson;
-                        state.returnItemsCount = conceptsJson.length;
-                      } else if (payload == "types") {
+                      } else if (payload.startsWith("concepts")) {
+                        if (payload.endsWith("none")) {
+                            state.apiData = conceptsJson;
+                            state.returnItemsCount = conceptsJson.length;
+                        } else {
+                            let entrypoint = payload.split("/")[1]
+                            state.apiData = [];
+                            state.returnItemsCount = 0;
+                            let conceptsInEntrypoint = entrypointConceptsJson[entrypoint];
+                            for (let i = 0; i < conceptsJson.length; i++) {
+                                let c = conceptsJson[i];
+                                for (let j = 0; j < conceptsInEntrypoint.length; j++) {
+                                    if (c.name == conceptsInEntrypoint[j]) {
+                                        state.apiData.push(c);
+                                        state.returnItemsCount++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                      } else if (payload.startsWith("types")) {
                         state.apiData = typesJson;
                         state.returnItemsCount = typesJson.length;
-                      } else if (payload == "units") {
+                      } else if (payload.startsWith("units")) {
                         state.apiData = unitsJson;
                         state.returnItemsCount = unitsJson.length;
-                      } else if (payload == "references") {
+                      } else if (payload.startsWith("glossary")) {
                         state.apiData = referencesJson;
                         state.returnItemsCount = referencesJson.length;
                       }
@@ -119,15 +139,6 @@ export default new Vuex.Store({
                         state.dataReady = true;
                       });
               }
-          axios
-              .get(state.apiURL + payload, {
-              })
-              .then(response => {
-                state.apiLoading = false;
-                state.apiData = response.data;
-                state.returnItemsCount = response.data.length;
-                state.dataReady = true;
-              });
        } else {
             var data = JSON.parse(process.env.TEST_JSON);
             state.apiLoading = false;
@@ -174,6 +185,32 @@ export default new Vuex.Store({
             state.apiDetailData = data;
             state.dataReady = true;
        }
+    },
+    callAPIentrypoints(state) {
+          if (process.env.JEST_WORKER_ID == undefined) {
+          // Skip call during jest unit tests.  Please note that this is not elegant (using Mocks correctly
+          // would be better) and hopefully improvements can be applied later.
+
+            if (entrypointsJson.length > 0){
+                // This will be encountered if the system was built with static pages (otherwise
+                  let entrypoint_data = entrypointsJson;
+                  for (let i in entrypoint_data) {
+                    state.entryPointList.push(entrypoint_data[i]["entrypoint"])
+                  }
+
+             } else {
+                // This version calls the web service interface.
+                axios
+                    .get(state.apiURL + "entrypoints/", {
+                    })
+                    .then(response => {
+                      let entrypoint_data = response.data;
+                      for (let i in entrypoint_data) {
+                        state.entryPointList.push(entrypoint_data[i]["entrypoint"])
+                      }
+                    });
+             }
+         }
     },
 
     toggleAPILoading(state) {

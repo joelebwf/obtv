@@ -13,17 +13,21 @@
 import viewer
 
 import json
+from oblib import taxonomy
 from flask import Flask
 
+
 app = Flask(__name__)
+tax = taxonomy.Taxonomy()
+
 
 with app.app_context():
     data = viewer.entrypoints().data.decode('UTF-8')
     with open("../resources/entrypoints.json", "w") as outfile:
         outfile.write(data)
 
+    entrypoints = json.loads(data)
     with open("../resources/entrypoints-details.json", "w") as outfile:
-        entrypoints = json.loads(data)
         data = {}
         for entrypoint in entrypoints:
             try:
@@ -32,7 +36,15 @@ with app.app_context():
                 pass
         outfile.write(json.dumps(data))
 
-    data = viewer.concepts().data.decode('UTF-8')
+    with open("../resources/entrypoints-concepts.json", "w") as outfile:
+        data = {}
+        for entrypoint in entrypoints:
+            data[entrypoint["entrypoint"]] = []
+            for concept in tax.semantic.get_entrypoint_concepts(entrypoint["entrypoint"]):
+                data[entrypoint["entrypoint"]].append(concept.split(":")[1])
+        outfile.write(json.dumps(data))
+
+    data = viewer.concepts("none").data.decode('UTF-8')
     with open("../resources/concepts.json", "w") as outfile:
         outfile.write(data)
 
@@ -51,6 +63,6 @@ with app.app_context():
     with open("../resources/units.json", "w") as outfile:
         outfile.write(data)
 
-    data = viewer.references().data.decode('UTF-8')
+    data = viewer.glossary().data.decode('UTF-8')
     with open("../resources/references.json", "w") as outfile:
         outfile.write(data)

@@ -53,8 +53,9 @@ export default {
         {
           key: "entrypoint",
           label: "Entrypoint",
-          thStyle: { width: "274px" },
-          thClass: ".col-field-styling"
+          thStyle: { width: "160px" },
+          thClass: ".col-field-styling",
+          tdClass: ".col-entrypoint-field-styling"
         },
         {
           key: "type",
@@ -171,7 +172,7 @@ export default {
   grid-template-columns: auto;
   height: 100%;
   padding-top: 5px;
-  width: 1163px;
+  width: 900px;
 }
 
 li {
@@ -219,7 +220,7 @@ ul {
   align-content: flex-start;
   grid-row: 2 / 3;
   grid-column: 1 /2;
-  width: 1163px;
+  width: 900px;
   height: 100%;
   overflow-y: auto;
 }
@@ -295,6 +296,10 @@ a {
 
 .col-field-styling {
   text-align: center;
+}
+
+.col-entrypoint-field-styling {
+  overflow-wrap: break-word;
 }
 
 .table {

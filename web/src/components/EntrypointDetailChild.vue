@@ -35,7 +35,7 @@
                                 <th>Purpose</th>
                             </tr>
                             <tr v-for="citem in item.columns">
-                                <td>{{ citem.name }}</td>
+                                <td class="anytext"><div class="anytext">{{ citem.name }}</div></td>
                                 <td v-if="citem.purpose == 'Abstract'"><a :href="'#'+citem.name">{{ citem.purpose }}</a></td>
                                 <td v-else>{{ citem.purpose }}
                                     <div v-if="citem.valuesenum != null">
@@ -96,6 +96,7 @@ h2 {
 .public-filter {
   padding-left: 20px;
   padding-top: 5px;
+  overflow-wrap: break-word;
 }
 
 .form-group {
@@ -154,4 +155,10 @@ li {
     margin-left: 35px;
 }
 
+.anytext {
+  overflow-wrap: break-word;
+  width: 400px;
+}
+
 </style>
+

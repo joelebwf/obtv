@@ -61,7 +61,7 @@ nav {
   font-size: 18px;
   font-style: normal;
   display: grid;
-  grid-template-columns: 600px 1fr;
+  grid-template-columns: 1300px 400px 1fr;
   padding-left: 20px;
   border-bottom: 1px solid #dadce0;
   padding-top: 12px;

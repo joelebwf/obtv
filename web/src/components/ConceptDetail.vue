@@ -15,7 +15,6 @@
 <template>
     <div class="public-filter">
         <form @submit.prevent>
-            <br/>
             <h1>{{ conceptName }} </h1>
             Label: {{ apiData.label }} <br/>
             Taxonomy: {{ apiData.taxonomy}} <br/>
@@ -92,8 +91,10 @@ h1 {
 }
 
 .public-filter {
-  padding-left: 20px;
-  padding-top: 5px;
+  width: 350px;
+  border: 1px solid #dadce0;
+  overflow-wrap: break-word;
+  padding: 5px;
 }
 
 .form-group {

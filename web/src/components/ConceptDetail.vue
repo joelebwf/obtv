@@ -14,45 +14,49 @@
 
 <template>
     <div class="public-filter">
-        <form @submit.prevent>
-            <h1>{{ conceptName }} </h1>
-            Label: {{ apiData.label }} <br/>
-            Taxonomy: {{ apiData.taxonomy}} <br/>
-            Entrypoints:<br/>
-            <ul>
-               <li v-for="item in apiData.entrypoints">
-                 {{ item }}
-               </li>
-            </ul>
-            Description:
-            <ul>
-              <li>{{ apiData.description }} </li>
-            </ul>
-            Item Type: {{ apiData.type }}<br/>
-            Validation Rule:  {{ apiData.validationRule }} <br/>
-                Precision/Decimals: {{ apiData.precisionDecimals }} <br/>
-            Units:
-            <ul>
-               <li v-for="item in apiData.units">
-                 {{ item }}
-               </li>
-            </ul>
-            Period: {{ apiData.period }} <br/>
-            Nillable: {{ apiData.nillable }} <br/>
-            Calculations:
-            <ul>
-               <li v-for="item in apiData.calculations">
-                 {{ item }}
-               </li>
-            </ul>
-            Usages in Calculations:
-            <ul>
-               <li v-for="item in apiData.usages">
-                 {{ item }}
-               </li>
-            </ul>
-
-        </form>
+        <div v-if="conceptName === ''">
+                <h1>Click on a row to display details</h1>
+        </div>
+        <div v-else>
+            <form @submit.prevent>
+                <h1>{{ conceptName }} </h1>
+                Label: {{ apiData.label }} <br/>
+                Taxonomy: {{ apiData.taxonomy}} <br/>
+                Entrypoints:<br/>
+                <ul>
+                   <li v-for="item in apiData.entrypoints">
+                     {{ item }}
+                   </li>
+                </ul>
+                Description:
+                <ul>
+                  <li>{{ apiData.description }} </li>
+                </ul>
+                Item Type: {{ apiData.type }}<br/>
+                Validation Rule:  {{ apiData.validationRule }} <br/>
+                    Precision/Decimals: {{ apiData.precisionDecimals }} <br/>
+                Units:
+                <ul>
+                   <li v-for="item in apiData.units">
+                     {{ item }}
+                   </li>
+                </ul>
+                Period: {{ apiData.period }} <br/>
+                Nillable: {{ apiData.nillable }} <br/>
+                Calculations:
+                <ul>
+                   <li v-for="item in apiData.calculations">
+                     {{ item }}
+                   </li>
+                </ul>
+                Usages in Calculations:
+                <ul>
+                   <li v-for="item in apiData.usages">
+                     {{ item }}
+                   </li>
+                </ul>
+            </form>
+        </div>
     </div>
 </template>
 

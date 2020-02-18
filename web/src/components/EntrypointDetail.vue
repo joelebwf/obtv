@@ -14,7 +14,12 @@
 
 <template>
      <div class="entrypoint-detail-container">
-         <entrypoint-child v-bind:abstract="apiData" v-bind:key="apiData.name"></entrypoint-child>
+        <div v-if="entrypointName === ''">
+                <h1>Click on a row to display details</h1>
+        </div>
+        <div v-else>
+             <entrypoint-child v-bind:abstract="apiData" v-bind:key="apiData.name"></entrypoint-child>
+        </div>
     </div>
 </template>
 
@@ -49,5 +54,12 @@ export default {
       border: 1px solid #dadce0;
       overflow-wrap: break-word;
       padding: 5px;
+    }
+
+    h1 {
+      font-size: 18px;
+      color: #4b4e52;
+      font-family: "Roboto Condensed";
+      font-weight: bold;
     }
 </style>

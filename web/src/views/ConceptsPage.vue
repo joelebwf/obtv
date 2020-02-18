@@ -45,6 +45,9 @@ export default {
     returnItemsCount() {
       return this.$store.state.returnItemsCount;
     }
+  },
+  created() {
+      this.$store.state.conceptDetail = "";
   }
 };
 

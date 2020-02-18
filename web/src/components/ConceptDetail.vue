@@ -91,7 +91,7 @@ h1 {
 }
 
 .public-filter {
-  width: 350px;
+  width: 600px;
   border: 1px solid #dadce0;
   overflow-wrap: break-word;
   padding: 5px;

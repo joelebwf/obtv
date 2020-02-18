@@ -158,7 +158,7 @@ export default {
   grid-template-columns: auto;
   height: 100%;
   padding-top: 5px;
-  width: 1163px;
+  width: 1500px;
 }
 
 li {
@@ -206,7 +206,7 @@ ul {
   align-content: flex-start;
   grid-row: 2 / 3;
   grid-column: 1 /2;
-  width: 1163px;
+  width: 1500px;
   #overflow-y: auto;
 }
 

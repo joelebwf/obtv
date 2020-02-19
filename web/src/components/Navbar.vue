@@ -15,7 +15,7 @@
 <template>
     <nav class="navbar navbar-expand-md navbar-light navbar-custom">
         <router-link to="entrypoints" class="navbar-brand">
-            <img id="oblogo" src="@/assets/ob.png"/>
+            <img id="oblogo" src="@/assets/ob.png" alt="Orange Button"/>
             <h1 class="app-title">Orange Button Taxonomy Viewer</h1>
         </router-link>
         <ul class="navbar-nav ml-auto">
@@ -61,7 +61,7 @@ nav {
   font-size: 18px;
   font-style: normal;
   display: grid;
-  grid-template-columns: 600px 1fr;
+  grid-template-columns: 1300px 400px 1fr;
   padding-left: 20px;
   border-bottom: 1px solid #dadce0;
   padding-top: 12px;

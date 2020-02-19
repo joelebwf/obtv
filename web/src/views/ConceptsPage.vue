@@ -45,6 +45,9 @@ export default {
     returnItemsCount() {
       return this.$store.state.returnItemsCount;
     }
+  },
+  created() {
+      this.$store.state.conceptDetail = "";
   }
 };
 
@@ -75,20 +78,13 @@ export default {
   grid-row: 2 / 3;
 }
 
-.nav-link {
-  display: inline;
-  padding: 0;
-  padding-right: 5px;
-}
-
-#sort-by-button {
-  float: right;
-}
-
 .concept-count {
-  grid-column: 4 / 5;
-  grid-row: 1 / 2;
-  font-family: "Roboto Condensed";
+    grid-column:  2 / 3;
+    grid-row: 1 / 3;
+    place-self: start;
+    justify-self: center;
+    padding-top: 340px;
+    font-weight: bold;
 }
 
 a {

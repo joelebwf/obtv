@@ -69,8 +69,8 @@ export default new Vuex.Store({
     chkAcronym: false,
     chkAbbreviation: false,
 
-    conceptDetail: "Click on a row to display details",
-    entrypointDetail: "Click on a row to display details"
+    conceptDetail: "",
+    entrypointDetail: ""
   },
   getters: {
     apiData: state => state.apiData,

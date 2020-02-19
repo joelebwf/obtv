@@ -13,7 +13,7 @@
 -->
 
 <template>
-    <div id="app">
+    <div id="app" role="main">
         <Navbar id="navbar"></Navbar>
         <router-view id="router-v"/>
         <!-- <Footer id="footer"></Footer> -->
@@ -46,10 +46,6 @@ html {
   background-color: white;
   display: grid;
   grid-template-rows: 70px 0px 1000px 10px 60px;
-}
-
-#footer {
-  grid-row: 5 / 6;
 }
 
 #router-v {

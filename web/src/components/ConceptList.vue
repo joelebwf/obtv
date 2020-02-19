@@ -39,7 +39,7 @@
                 </template>
             </b-table>
             <div class="load-more-btn-container" v-if="!apiLoading">
-              <b-button variant="primary" @click="loadMore" v-if="showLoadMore">Load more</b-button>
+              <b-button @click="loadMore" v-if="showLoadMore">Load more</b-button>
             </div>
         </div>
     </div>
@@ -168,12 +168,9 @@ export default {
 </script>
 
 <style>
-.btn {
-  margin: 5px;
-}
 .concept-public-list-container {
   display: grid;
-  grid-template-rows: 50px 720px 50px;
+  grid-template-rows: 20px 720px 50px;
   grid-template-columns: auto;
   height: 100%;
   padding-top: 5px;
@@ -190,32 +187,6 @@ ul {
   list-style: none;
 }
 
-.card {
-  border: 2px solid #444549;
-  box-shadow: 3px 3px 8px 0px rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-  height: 227px;
-  width: 488px;
-  padding: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  display: grid;
-  grid-template-columns: 33% 1fr;
-  grid-template-rows: 140px auto;
-  font-family: "Roboto Condensed";
-}
-
-.logo {
-  width: 140px;
-  height: 140px;
-  background-color: #d8d8d8;
-}
-
-.card-body {
-  padding: 0;
-  grid-column: 2 / 3;
-}
-
 .concept-public-list {
   display: flex;
   flex-direction: row;
@@ -227,6 +198,7 @@ ul {
   grid-row: 2 / 3;
   grid-column: 1 /2;
   width: 900px;
+<<<<<<< HEAD
 }
 
 a.nav-link {
@@ -244,6 +216,8 @@ a.nav-link {
   margin-top: 150px;
   grid-row: 2 / 3;
   grid-column: 1 /2;
+=======
+>>>>>>> cf72d4d898260f55d913ff136940dce42c1753a6
 }
 
 @keyframes spin {
@@ -255,55 +229,12 @@ a.nav-link {
   }
 }
 
-#top-buttons {
-  grid-row: 1 / 2;
-  margin-top: -20px;
-  position: relative;
-  margin-left: auto;
-  margin-right: 0;
-}
-
-#bottom-buttons {
-  grid-row: 3 / 4;
-  position: relative;
-  margin-left: auto;
-  margin-right: 0;
-}
-
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-primary,
-.btn-primary:hover,
-.btn-primary:active,
-.btn-primary:visited,
-.btn-primary:focus,
-.btn-primary:disabled {
-  background-color: #1d4679;
-  border-color: #1d4679;
-}
-
 a {
   color: #1d4679;
 }
 
 .concept-table {
   margin-left: 0px;
-}
-
-.concept-code-field-col {
-  width: 400px;
-  text-align: center;
-}
-
-.col-field-styling {
-  text-align: center;
-}
-
-.table {
-  margin-bottom: 0px !important;
 }
 
 .load-more-btn-container {

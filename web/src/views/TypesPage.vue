@@ -65,20 +65,13 @@ export default {
   grid-row: 1 / span 2;
 }
 
-.nav-link {
-  display: inline;
-  padding: 0;
-  padding-right: 5px;
-}
-
-#sort-by-button {
-  float: right;
-}
-
 .type-count {
-  grid-column: 4 / 5;
-  grid-row: 1 / 2;
-  font-family: "Roboto Condensed";
+    grid-column:  2 / 3;
+    grid-row: 1 / 3;
+    place-self: start;
+    justify-self: center;
+    padding-top: 300px;
+    font-weight: bold;
 }
 
 a {

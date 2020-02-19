@@ -91,15 +91,6 @@ h1 {
   border: 1px solid #dadce0;
   overflow-wrap: break-word;
   padding: 5px;
-<<<<<<< HEAD
-}
-
-.form-group {
-  font-family: "Roboto Condensed";
-
-  display: block;
-=======
->>>>>>> cf72d4d898260f55d913ff136940dce42c1753a6
 }
 
 button {

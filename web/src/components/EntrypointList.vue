@@ -196,26 +196,6 @@ ul {
   grid-row: 2 / 3;
   grid-column: 1 /2;
   width: 900px;
-<<<<<<< HEAD
-}
-
-a.nav-link {
-  padding: 0px;
-}
-
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-  margin-left: 400px;
-  margin-top: 150px;
-  grid-row: 2 / 3;
-  grid-column: 1 /2;
-=======
->>>>>>> cf72d4d898260f55d913ff136940dce42c1753a6
 }
 
 @keyframes spin {
@@ -235,26 +215,6 @@ a {
   margin-left: 0px;
 }
 
-<<<<<<< HEAD
-.entrypoint-code-field-col {
-  width: 400px;
-  text-align: center;
-}
-
-.col-field-styling {
-  text-align: center;
-}
-
-.col-entrypoint-field-styling {
-  overflow-wrap: break-word;
-}
-
-.table {
-  margin-bottom: 0px !important;
-}
-
-=======
->>>>>>> cf72d4d898260f55d913ff136940dce42c1753a6
 .load-more-btn-container {
   width: 100%;
   display: flex;

@@ -93,15 +93,6 @@ h2 {
   padding-left: 20px;
   padding-top: 5px;
   overflow-wrap: break-word;
-<<<<<<< HEAD
-}
-
-.form-group {
-  font-family: "Roboto Condensed";
-
-  display: block;
-=======
->>>>>>> cf72d4d898260f55d913ff136940dce42c1753a6
 }
 
 button {

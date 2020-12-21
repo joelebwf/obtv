@@ -194,6 +194,8 @@ def glossary():
 def concept_detail(concept, taxonomy):
     """Generates concept_detail data"""
 
+    name = concept
+
     concept = taxonomy.lower() + ":" + concept
 
     details = tax.semantic.get_concept_details(concept)
@@ -263,10 +265,12 @@ def concept_detail(concept, taxonomy):
         usages = ["None"]
 
     data = {
+        "name": name,
         "label": label,
         "taxonomy": taxonomy,
         "entrypoints": entrypoints,
         "description": docs,
+        "itemtype": item_type,
         "type": item_type,
         "validationRule": validation_rule,
         "precisionDecimals": precision_decimals,

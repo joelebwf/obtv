@@ -21,7 +21,6 @@ import typesJson from '../resources/types.json'
 import unitsJson from '../resources/units.json'
 import referencesJson from '../resources/references.json'
 import entrypointsDetailsJson from '../resources/entrypoints-details.json'
-import conceptsDetailsJson from '../resources/concepts-details.json'
 import entrypointConceptsJson from '../resources/entrypoints-concepts.json'
 
 Vue.use(Vuex);
@@ -158,7 +157,12 @@ export default new Vuex.Store({
             if (payload[0] == "entrypointdetail") {
               state.apiDetailData = entrypointsDetailsJson[payload[1]];
             } else {
-              state.apiDetailData = conceptsDetailsJson[payload[1]];
+                for (let j = 0; j < conceptsJson.length; j++) {
+                    if (payload[1] == conceptsJson[j].name) {
+                        state.apiDetailData = conceptsJson[j];
+                        break;
+                    }
+                }
             }
             state.dataReady = true;
        } else {

@@ -101,6 +101,7 @@ export default {
       let tableData = this.$store.state.apiData.filter( node => {
           return ((node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkName) ||
             (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkDescription) ||
+            (node.units.includes(this.$store.state.searchTerm) && this.$store.state.chkUnit) ||
             (node.itemtype.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())) && this.$store.state.chkType) &&
             ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
              (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||

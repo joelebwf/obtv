@@ -228,9 +228,10 @@ def concept_detail(concept, taxonomy):
     else:
         validation_rule = "None"
 
+    enums = []
     if t == "Enumeration":
         for e in tax.types.get_type_enum(details.type_name):
-            pass
+            enums.append(e)
 
     if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
         precision_decimals = "Either Precision or Decimals must be specified"
@@ -270,9 +271,9 @@ def concept_detail(concept, taxonomy):
         "taxonomy": taxonomy,
         "entrypoints": entrypoints,
         "description": docs,
-        "itemtype": item_type,
         "type": item_type,
         "validationRule": validation_rule,
+        "enums": enums,
         "precisionDecimals": precision_decimals,
         "units": units,
         "period": period,

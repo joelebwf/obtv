@@ -64,7 +64,7 @@ export default {
           thStyle: { width: "87px" }
         },
         {
-          key: "itemtype",
+          key: "type",
           label: "Item Type",
           thClass: ".col-field-styling",
           thStyle: { width: "87px" }
@@ -102,6 +102,7 @@ export default {
           return ((node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkName) ||
             (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkDescription) ||
             (node.units.includes(this.$store.state.searchTerm) && this.$store.state.chkUnit) ||
+            (node.enums.includes(this.$store.state.searchTerm) && this.$store.state.chkEnumerations) ||
             (node.itemtype.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())) && this.$store.state.chkType) &&
             ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
              (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||

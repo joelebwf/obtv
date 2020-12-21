@@ -41,12 +41,8 @@ with open("../web/resources/entrypoints-concepts.json", "w") as outfile:
             data[entrypoint["entrypoint"]].append(concept.split(":")[1])
     outfile.write(json.dumps(data))
 
-data = generator.concepts("none")
 with open("../web/resources/concepts.json", "w") as outfile:
-    concepts = data
-    data = []
-    for concept in concepts:
-        data.append(generator.concept_detail(concept["name"], concept["taxonomy"]))
+    data = generator.concepts()
     outfile.write(json.dumps(data))
 
 data = generator.types()

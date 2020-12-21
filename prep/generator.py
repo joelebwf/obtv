@@ -30,57 +30,6 @@ def convert(name):
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1)
 
 
-def concepts(entrypoint):
-    """Generates concepts data"""
-
-    if entrypoint == "none":
-        data = []
-        for concept in tax.semantic.get_all_concepts(details=True):
-            details = tax.semantic.get_concept_details(concept)
-            if not details.abstract:
-                docs = tax.documentation.get_concept_documentation(concept)
-                if docs is None:
-                    docs = ""
-                t = "SOLAR"
-                if details.id.startswith("us-gaap:"):
-                    t = "US-GAAP"
-                elif details.id.startswith("dei:"):
-                    t = "DEI"
-                data.append({
-                    "name": details.name,
-                    "taxonomy": t,
-                    "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                    "period": details.period_type.value,
-                    "description": docs
-                })
-    else:
-        data = []
-        entrypoint_concepts = []
-        for concept in tax.semantic.get_entrypoint_concepts(entrypoint).sort():
-            entrypoint_concepts.append(concept)
-        for concept in tax.semantic.get_all_concepts(details=True).sort():
-            if concept in entrypoint_concepts:
-                details = tax.semantic.get_concept_details(concept)
-                if not details.abstract:
-                    docs = tax.documentation.get_concept_documentation(concept)
-                    if docs is None:
-                        docs = ""
-                    t = "SOLAR"
-                    if details.id.startswith("us-gaap:"):
-                        t = "US-GAAP"
-                    elif details.id.startswith("dei:"):
-                        t = "DEI"
-                    data.append({
-                        "name": details.name,
-                        "taxonomy": t,
-                        "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                        "period": details.period_type.value,
-                        "description": docs
-                    })
-
-    return data
-
-
 def units():
     """Generates units data"""
 
@@ -191,96 +140,96 @@ def glossary():
     return data
 
 
-def concept_detail(concept, taxonomy):
-    """Generates concept_detail data"""
+def concepts():
+    """Generates Concepts with detailed data"""
 
-    name = concept
+    data=[]
+    for concept in tax.semantic.get_all_concepts(details=True):
+        name = concept.split(":")[1]
+        details = tax.semantic.get_concept_details(concept)
+        if not details:
+            raise KeyError('Concept {} not found'.format(concept))
 
-    concept = taxonomy.lower() + ":" + concept
+        if not details.abstract:
+            label = convert(details.name)
 
-    details = tax.semantic.get_concept_details(concept)
-    if not details:
-        raise KeyError('Concept {} not found'.format(concept))
+            taxonomy = "SOLAR"
+            if details.id.startswith("us-gaap:"):
+                taxonomy = "US-GAAP"
+            elif details.id.startswith("dei:"):
+                taxonomy = "DEI"
 
-    label = convert(details.name)
+            entrypoints = []
+            for entrypoint in tax.semantic.get_all_entrypoints():
+                if entrypoint != "All":
+                    if concept in tax.semantic.get_entrypoint_concepts(entrypoint):
+                        entrypoints.append(entrypoint)
 
-    taxonomy = "SOLAR"
-    if details.id.startswith("us-gaap:"):
-        taxonomy = "US-GAAP"
-    elif details.id.startswith("dei:"):
-        taxonomy = "DEI"
+            docs = tax.documentation.get_concept_documentation(concept)
+            if docs is None:
+                docs = "None"
 
-    entrypoints = []
-    for entrypoint in tax.semantic.get_all_entrypoints():
-        if entrypoint != "All":
-            if concept in tax.semantic.get_entrypoint_concepts(entrypoint):
-                entrypoints.append(entrypoint)
+            item_type = details.type_name.split(":")[1].replace("ItemType", "")
 
-    docs = tax.documentation.get_concept_documentation(concept)
-    if docs is None:
-        docs = "None"
-
-    item_type = details.type_name.split(":")[1].replace("ItemType", "")
-
-    t = reference.TYPES[details.type_name]
-    if t in reference.VALIDATION_RULES:
-        validation_rule = reference.VALIDATION_RULES[t]
-    else:
-        validation_rule = "None"
-
-    enums = []
-    if t == "Enumeration":
-        for e in tax.types.get_type_enum(details.type_name):
-            enums.append(e)
-
-    if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
-        precision_decimals = "Either Precision or Decimals must be specified"
-    else:
-        precision_decimals= "N/A (neither precision nor decimals may be specified)"
-
-    units = tax.get_concept_units(concept)
-    if not units:
-        units = ["N/A (units are not specified)"]
-
-    period = details.period_type.value
-    if period == "instant":
-        period = "Instant in time"
-    else:
-        period = "Period of time"
-    nillable = details.nillable
-
-    calculations = tax.semantic.get_concept_calculation(concept)
-    if len(calculations)==0:
-        calc = ["N/A"]
-    else:
-        calc = []
-        for calculation in calculations:
-            if calculation[1] == 1:
-                sign = "+"
+            t = reference.TYPES[details.type_name]
+            if t in reference.VALIDATION_RULES:
+                validation_rule = reference.VALIDATION_RULES[t]
             else:
-                sign = "-"
-            calc.append(sign + " " + calculation[0])
+                validation_rule = "None"
 
-    usages = tax.semantic.get_concept_calculated_usage(concept)
-    if len(usages) == 0:
-        usages = ["None"]
+            enums = []
+            if t == "Enumeration":
+                for e in tax.types.get_type_enum(details.type_name):
+                    enums.append(e)
 
-    data = {
-        "name": name,
-        "label": label,
-        "taxonomy": taxonomy,
-        "entrypoints": entrypoints,
-        "description": docs,
-        "type": item_type,
-        "validationRule": validation_rule,
-        "enums": enums,
-        "precisionDecimals": precision_decimals,
-        "units": units,
-        "period": period,
-        "nillable": nillable,
-        "calculations": calc,
-        "usages": usages
-    }
+            if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
+                precision_decimals = "Either Precision or Decimals must be specified"
+            else:
+                precision_decimals= "N/A (neither precision nor decimals may be specified)"
+
+            units = tax.get_concept_units(concept)
+            if not units:
+                units = ["N/A (units are not specified)"]
+
+            period = details.period_type.value
+            if period == "instant":
+                period = "Instant in time"
+            else:
+                period = "Period of time"
+            nillable = details.nillable
+
+            calculations = tax.semantic.get_concept_calculation(concept)
+            if len(calculations)==0:
+                calc = ["N/A"]
+            else:
+                calc = []
+                for calculation in calculations:
+                    if calculation[1] == 1:
+                        sign = "+"
+                    else:
+                        sign = "-"
+                    calc.append(sign + " " + calculation[0])
+
+            usages = tax.semantic.get_concept_calculated_usage(concept)
+            if len(usages) == 0:
+                usages = ["None"]
+
+            data.append({
+                "name": name,
+                "label": label,
+                "taxonomy": taxonomy,
+                "entrypoints": entrypoints,
+                "description": docs,
+                "type": item_type,
+                "validationRule": validation_rule,
+                "enums": enums,
+                "precisionDecimals": precision_decimals,
+                "units": units,
+                "period": period,
+                "nillable": nillable,
+                "calculations": calc,
+                "usages": usages
+            })
 
     return data
 

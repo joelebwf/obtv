@@ -38,6 +38,9 @@ def concepts(entrypoint):
         for concept in tax.semantic.get_all_concepts(details=True):
             details = tax.semantic.get_concept_details(concept)
             if not details.abstract:
+                docs = tax.documentation.get_concept_documentation(concept)
+                if docs is None:
+                    docs = ""
                 t = "SOLAR"
                 if details.id.startswith("us-gaap:"):
                     t = "US-GAAP"
@@ -47,7 +50,8 @@ def concepts(entrypoint):
                     "name": details.name,
                     "taxonomy": t,
                     "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                    "period": details.period_type.value
+                    "period": details.period_type.value,
+                    "description": docs
                 })
     else:
         data = []
@@ -58,6 +62,9 @@ def concepts(entrypoint):
             if concept in entrypoint_concepts:
                 details = tax.semantic.get_concept_details(concept)
                 if not details.abstract:
+                    docs = tax.documentation.get_concept_documentation(concept)
+                    if docs is None:
+                        docs = ""
                     t = "SOLAR"
                     if details.id.startswith("us-gaap:"):
                         t = "US-GAAP"
@@ -67,7 +74,8 @@ def concepts(entrypoint):
                         "name": details.name,
                         "taxonomy": t,
                         "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                        "period": details.period_type.value
+                        "period": details.period_type.value,
+                        "description": docs
                     })
 
     return data

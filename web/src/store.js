@@ -50,6 +50,12 @@ export default new Vuex.Store({
     chkData: false,
     chkProcess: false,
 
+    chkName: true,
+    chkDescription: false,
+    chkType: false,
+    chkEnumerations: false,
+    chkUnit: false,
+
     chkSolar: false,
     chkUSGaap: false,
     chkDEI: false,
@@ -69,6 +75,9 @@ export default new Vuex.Store({
     chkAcronym: false,
     chkAbbreviation: false,
 
+    radioSearchName: true,
+    radioSearchAll: false,
+    
     conceptDetail: "",
     entrypointDetail: ""
   },
@@ -90,55 +99,41 @@ export default new Vuex.Store({
           // Skip call during jest unit tests.  Please note that this is not elegant (using Mocks correctly
           // would be better) and hopefully improvements can be applied later.
 
-               if (entrypointsJson.length > 0){
-                    // This will be encountered if the system was built with static pages (otherwise
-                     if (payload.startsWith("entrypoints")) {
-                        state.apiData = entrypointsJson;
-                        state.returnItemsCount = entrypointsJson.length;
-                      } else if (payload.startsWith("concepts")) {
-                        if (payload.endsWith("none")) {
-                            state.apiData = conceptsJson;
-                            state.returnItemsCount = conceptsJson.length;
-                        } else {
-                            let entrypoint = payload.split("/")[1]
-                            state.apiData = [];
-                            state.returnItemsCount = 0;
-                            let conceptsInEntrypoint = entrypointConceptsJson[entrypoint];
-                            for (let i = 0; i < conceptsJson.length; i++) {
-                                let c = conceptsJson[i];
-                                for (let j = 0; j < conceptsInEntrypoint.length; j++) {
-                                    if (c.name == conceptsInEntrypoint[j]) {
-                                        state.apiData.push(c);
-                                        state.returnItemsCount++;
-                                        break;
-                                    }
-                                }
-                            }
+          if (payload.startsWith("entrypoints")) {
+            state.apiData = entrypointsJson;
+              state.returnItemsCount = entrypointsJson.length;
+          } else if (payload.startsWith("concepts")) {
+            if (payload.endsWith("none")) {
+                state.apiData = conceptsJson;
+                state.returnItemsCount = conceptsJson.length;
+            } else {
+                let entrypoint = payload.split("/")[1]
+                state.apiData = [];
+                state.returnItemsCount = 0;
+                let conceptsInEntrypoint = entrypointConceptsJson[entrypoint];
+                for (let i = 0; i < conceptsJson.length; i++) {
+                    let c = conceptsJson[i];
+                    for (let j = 0; j < conceptsInEntrypoint.length; j++) {
+                        if (c.name == conceptsInEntrypoint[j]) {
+                            state.apiData.push(c);
+                            state.returnItemsCount++;
+                            break;
                         }
-                      } else if (payload.startsWith("types")) {
-                        state.apiData = typesJson;
-                        state.returnItemsCount = typesJson.length;
-                      } else if (payload.startsWith("units")) {
-                        state.apiData = unitsJson;
-                        state.returnItemsCount = unitsJson.length;
-                      } else if (payload.startsWith("glossary")) {
-                        state.apiData = referencesJson;
-                        state.returnItemsCount = referencesJson.length;
-                      }
-                      state.apiLoading = false;
-                      state.dataReady = true;
-               } else {
-                  // This version calls the web service interface.
-                  axios
-                      .get(state.apiURL + payload, {
-                      })
-                      .then(response => {
-                        state.apiLoading = false;
-                        state.apiData = response.data;
-                        state.returnItemsCount = response.data.length;
-                        state.dataReady = true;
-                      });
+                    }
+                }
               }
+            } else if (payload.startsWith("types")) {
+              state.apiData = typesJson;
+              state.returnItemsCount = typesJson.length;
+            } else if (payload.startsWith("units")) {
+              state.apiData = unitsJson;
+              state.returnItemsCount = unitsJson.length;
+            } else if (payload.startsWith("glossary")) {
+              state.apiData = referencesJson;
+              state.returnItemsCount = referencesJson.length;
+            }
+            state.apiLoading = false;
+            state.dataReady = true;
        } else {
             var data = JSON.parse(process.env.TEST_JSON);
             state.apiLoading = false;
@@ -159,26 +154,13 @@ export default new Vuex.Store({
           // Skip call during jest unit tests.  Please note that this is not elegant (using Mocks correctly
           // would be better) and hopefully improvements can be applied later.
 
-            if (entrypointsJson.length > 0){
-                // This will be encountered if the system was built with static pages (otherwise
-                state.apiDetailLoading = false;
-                if (payload[0] == "entrypointdetail") {
-                  state.apiDetailData = entrypointsDetailsJson[payload[1]];
-                } else {
-                  state.apiDetailData = conceptsDetailsJson[payload[1]];
-                }
-                state.dataReady = true;
-             } else {
-                // This version calls the web service interface.
-                axios
-                     .get(state.apiURL + payload[0] + "/" + payload[1] + "/" + payload[2], {
-                     })
-                     .then(response => {
-                       state.apiDetailLoading = false;
-                       state.apiDetailData = response.data;
-                       state.dataReady = true;
-                     });
+            state.apiDetailLoading = false;
+            if (payload[0] == "entrypointdetail") {
+              state.apiDetailData = entrypointsDetailsJson[payload[1]];
+            } else {
+              state.apiDetailData = conceptsDetailsJson[payload[1]];
             }
+            state.dataReady = true;
        } else {
             var data = JSON.parse(process.env.TEST_JSON);
             state.apiDetailLoading = false;
@@ -191,26 +173,11 @@ export default new Vuex.Store({
           // Skip call during jest unit tests.  Please note that this is not elegant (using Mocks correctly
           // would be better) and hopefully improvements can be applied later.
 
-            if (entrypointsJson.length > 0){
-                // This will be encountered if the system was built with static pages (otherwise
-                  let entrypoint_data = entrypointsJson;
-                  for (let i in [...new Set(entrypoint_data)]) {     // Use set to remove dups
-                    state.entryPointList.push(entrypoint_data[i]["entrypoint"])
-                  }
-
-             } else {
-                // This version calls the web service interface.
-                axios
-                    .get(state.apiURL + "entrypoints/", {
-                    })
-                    .then(response => {
-                      let entrypoint_data = response.data;
-                      for (let i in entrypoint_data) {
-                        state.entryPointList.push(entrypoint_data[i]["entrypoint"])
-                      }
-                    });
-             }
-         }
+              let entrypoint_data = entrypointsJson;
+              for (let i in [...new Set(entrypoint_data)]) {     // Use set to remove dups
+                state.entryPointList.push(entrypoint_data[i]["entrypoint"])
+              }
+          }
     },
 
     toggleAPILoading(state) {
@@ -226,6 +193,13 @@ export default new Vuex.Store({
       state.chkData = false;
       state.chkDocuments = false;
       state.chkProcess = false;
+    },
+    resetConceptsTypes(state) {
+      state.chkName = true;
+      state.chkDescription = false;
+      state.chkType = false;
+      state.chkEnumerations = false;
+      state.chkUnit = false;
     },
     clearConceptsChks(state) {
       state.chkSolar = false;

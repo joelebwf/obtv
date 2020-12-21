@@ -99,7 +99,9 @@ export default {
     },
     searchFilter() {
       let tableData = this.$store.state.apiData.filter( node => {
-          return node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
+          return ((node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkName) ||
+            (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkDescription) ||
+            (node.itemtype.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())) && this.$store.state.chkType) &&
             ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
              (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||
              (node.taxonomy.toLowerCase()=="dei" && this.$store.state.chkDEI) ||

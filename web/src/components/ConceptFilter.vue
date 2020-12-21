@@ -28,6 +28,24 @@
                 </label>
             </div>
 
+            <h1>Search Type</h1>
+            <div class="form-group">
+                <label for="name">
+                    <input type="checkbox" id="name" value="Solar" v-model="$store.state.chkName"/> Name
+                </label>
+                <label for="description">
+                    <input type="checkbox" id="description" value="USGaap" v-model="$store.state.chkDescription"/> Description
+                </label>
+                <label for="type">
+                    <input type="checkbox" id="type" value="DEI" v-model="$store.state.chkType"/> Type
+                </label>
+                <label for="enumerations">
+                    <input type="checkbox" id="enumerations" value="DEI" v-model="$store.state.chkEnumerations"/> Enumerations
+                </label>
+                <label for="unit">
+                    <input type="checkbox" id="unit" value="DEI" v-model="$store.state.chkUnit"/> Unit
+                </label>
+            </div>
             <h1>Concept Type</h1>
             <div class="form-group">
                 <label for="solar">
@@ -46,7 +64,7 @@
             </div>
             <div class="button-group">
                 <button type="button" class="btn btn-primary" @click="updateQuery">
-                    <v-icon name="search" class="search-icon"/>&nbsp; Search
+                    <v-icon name="check" class="clear-icon"/> Reset Type
                 </button>
                 <button type="button" class="btn btn-primary" @click="clearFilters">
                     <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
@@ -70,7 +88,9 @@ export default {
   },
   methods: {
     updateQuery() {
-       // TODO: Remove - currently referenced in other code.
+      this.$store.commit("toggleAPILoading");
+      this.$store.commit("resetConceptsTypes");
+      this.$store.commit("callAPI", "concepts/none");
     },
     clearFilters() {
       this.$store.commit("toggleAPILoading");
@@ -121,7 +141,7 @@ h1 {
 }
 
 button {
-  margin: 5px;
+  margin: 1px;
   margin-bottom: 15px;
 }
 

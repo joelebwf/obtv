@@ -19,11 +19,52 @@ import reference
 import relationships
 
 import re
+import xml.sax
 
 from oblib import taxonomy
-from flask import jsonify
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 tax = taxonomy.Taxonomy()
+
+class _TaxonomyDocumentationHandler(xml.sax.ContentHandler):
+    """Loads Taxonomy Docstrings from Labels file"""
+
+    def __init__(self):
+        """Ref parts constructor."""
+        self._documentation = {}
+        self._awaiting_text_for_concept = None
+
+    def startElement(self, name, attrs):
+        # Technically we should be using the labelArc element to connect a label
+        # element to a loc element and the loc element refers to a concept by its anchor
+        # within the main xsd, but that's really complicated and in practice the
+        # xlink:label atrr in the <label> element seems to always be "label_" plus the
+        # name of the concept.
+        concept = None
+        role = None
+        if name == "link:label":
+            for item in attrs.items():
+                # Do we care about the difference between xlink:role="http:.../documentation"
+                # and xlink:role="http:.../label" ??
+                if item[0] == "xlink:label":
+                    concept = item[1].replace("lab_", "")
+                if item[0] == "xlink:role":
+                    role = item[1]
+        if concept is not None and role == "http://www.xbrl.org/2003/role/documentation":
+            self._awaiting_text_for_concept = concept
+
+    def characters(self, chars):
+        if self._awaiting_text_for_concept is not None:
+            self._documentation[ self._awaiting_text_for_concept] = chars
+
+    def endElement(self, name):
+        self._awaiting_text_for_concept = None
+
+    def docstrings(self):
+        return self._documentation
+
 
 def convert(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', name)
@@ -143,6 +184,20 @@ def glossary():
 def concepts():
     """Generates Concepts with detailed data"""
 
+    # Load US-GAAP documentation which is not currently in oblib.
+    filename = "us-gaap-doc-2017-01-31.xml"
+    usgaap_docs = _TaxonomyDocumentationHandler()
+    parser = xml.sax.make_parser()
+    parser.setContentHandler(usgaap_docs)
+    parser.parse("http://xbrl.fasb.org/us-gaap/2017/elts/us-gaap-doc-2017-01-31.xml")
+
+    # Load DEI documentation which is not currently in oblib.
+    filename = "dei-doc-2018-01-31.xml"
+    dei_docs = _TaxonomyDocumentationHandler()
+    parser = xml.sax.make_parser()
+    parser.setContentHandler(dei_docs)
+    parser.parse("https://xbrl.sec.gov/dei/2018/dei-doc-2018-01-31.xml")
+
     data=[]
     for concept in tax.semantic.get_all_concepts(details=True):
         name = concept.split(":")[1]
@@ -165,7 +220,13 @@ def concepts():
                     if concept in tax.semantic.get_entrypoint_concepts(entrypoint):
                         entrypoints.append(entrypoint)
 
-            docs = tax.documentation.get_concept_documentation(concept)
+            docs = "None"
+            if taxonomy == "SOLAR":
+                docs = tax.documentation.get_concept_documentation(concept)
+            elif taxonomy == "US-GAAP":
+                docs = usgaap_docs.docstrings()[name]
+            elif taxonomy == "DEI":
+                docs = dei_docs.docstrings()[name]
             if docs is None:
                 docs = "None"
 

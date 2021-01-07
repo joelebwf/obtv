@@ -83,7 +83,7 @@ export default {
     grid-row: 1 / 3;
     place-self: start;
     justify-self: center;
-    padding-top: 500px;
+    padding-top: 510px;
     font-weight: bold;
 }
 

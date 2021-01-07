@@ -31,19 +31,22 @@
             <h1>Search Type</h1>
             <div class="form-group">
                 <label for="name">
-                    <input type="checkbox" id="name" value="Solar" v-model="$store.state.chkName"/> Name
+                    <input type="checkbox" id="name" value="Name" v-model="$store.state.chkName"/> Name
                 </label>
                 <label for="description">
-                    <input type="checkbox" id="description" value="USGaap" v-model="$store.state.chkDescription"/> Description
+                    <input type="checkbox" id="description" value="Description" v-model="$store.state.chkDescription"/> Description
                 </label>
                 <label for="type">
-                    <input type="checkbox" id="type" value="DEI" v-model="$store.state.chkType"/> Type
+                    <input type="checkbox" id="type" value="Type" v-model="$store.state.chkType"/> Type
                 </label>
                 <label for="enumerations">
-                    <input type="checkbox" id="enumerations" value="DEI" v-model="$store.state.chkEnumerations"/> Enumerations
+                    <input type="checkbox" id="enumerations" value="Enumerations" v-model="$store.state.chkEnumerations"/> Enumerations
                 </label>
                 <label for="unit">
-                    <input type="checkbox" id="unit" value="DEI" v-model="$store.state.chkUnit"/> Unit
+                    <input type="checkbox" id="unit" value="Unit" v-model="$store.state.chkUnit"/> Unit
+                </label>
+                <label for="all">
+                    <input type="checkbox" id="unit" value="All" @click="selectAll" v-model="$store.state.chkAll"/> All
                 </label>
             </div>
             <h1>Concept Type</h1>
@@ -99,6 +102,9 @@ export default {
       this.$store.commit("clearConceptsChks");
       this.entryPointSelected = '';
       this.$store.commit("callAPI", "concepts/none");
+    },
+    selectAll() {
+      this.$store.commit("selectAllConceptsTypes")
     }
   },
   watch: {

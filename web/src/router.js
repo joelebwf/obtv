@@ -24,7 +24,7 @@ Vue.use(Router);
 
 export default new Router({
   routes: [
-    { path: "/", redirect: "/entrypoints" },
+    { path: "/", redirect: "/concepts" },
     {
       path: "/entrypoints",
       name: "entrypoints",

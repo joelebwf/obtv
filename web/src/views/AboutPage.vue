@@ -45,18 +45,18 @@
                     <b>The following screens are available in OBTV:</b>
                 </p>
                 <p>
-                    <b>Entrypoints:</b>
-                    A taxonomy entry point identifies a subset (or "view") of a taxonomy. An entry point contains
-                    a set of concepts (concepts may be present in multiple entrypoints) grouped into Abstracts and
-                    Tables.
-                </p>
-                <p>
                     <b>Concepts:</b>
                     A taxonomy element that provides the meaning for a fact. For example, "Profit", "Turnover", and
                     "Assets" would be typical concepts. Please note that although XBRL contains Abstract Concepts
                     (concepts that do not have facts) they are not displayed as Concepts in OBTV (use XBRL Desktop
                     Software to display instead) but rather indirectly reflected in the Entrypoint hierarchies in
                     order to simplify concept display for business users.
+                </p>
+                <p>
+                    <b>Entrypoints:</b>
+                    A taxonomy entry point identifies a subset (or "view") of a taxonomy. An entry point contains
+                    a set of concepts (concepts may be present in multiple entrypoints) grouped into Abstracts and
+                    Tables.
                 </p>
                 <p>
                     <b>Types:</b>

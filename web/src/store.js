@@ -13,7 +13,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import axios from "axios";
-import constants from "./constants.js";
 
 import entrypointsJson from '../resources/entrypoints.json'
 import conceptsJson from '../resources/concepts.json'
@@ -28,7 +27,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     apiData: [],
-    apiURL: constants.API_ENDPOINT,
     apiLoading: true,
     returnItemsCount: 0,
     dataReady: false,

@@ -19,58 +19,56 @@ import reference
 import relationships
 
 import re
+import xml.sax
 
 from oblib import taxonomy
-from flask import jsonify
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 tax = taxonomy.Taxonomy()
+
+class _TaxonomyDocumentationHandler(xml.sax.ContentHandler):
+    """Loads Taxonomy Docstrings from Labels file"""
+
+    def __init__(self):
+        """Ref parts constructor."""
+        self._documentation = {}
+        self._awaiting_text_for_concept = None
+
+    def startElement(self, name, attrs):
+        # Technically we should be using the labelArc element to connect a label
+        # element to a loc element and the loc element refers to a concept by its anchor
+        # within the main xsd, but that's really complicated and in practice the
+        # xlink:label atrr in the <label> element seems to always be "label_" plus the
+        # name of the concept.
+        concept = None
+        role = None
+        if name == "link:label":
+            for item in attrs.items():
+                # Do we care about the difference between xlink:role="http:.../documentation"
+                # and xlink:role="http:.../label" ??
+                if item[0] == "xlink:label":
+                    concept = item[1].replace("lab_", "")
+                if item[0] == "xlink:role":
+                    role = item[1]
+        if concept is not None and role == "http://www.xbrl.org/2003/role/documentation":
+            self._awaiting_text_for_concept = concept
+
+    def characters(self, chars):
+        if self._awaiting_text_for_concept is not None:
+            self._documentation[ self._awaiting_text_for_concept] = chars
+
+    def endElement(self, name):
+        self._awaiting_text_for_concept = None
+
+    def docstrings(self):
+        return self._documentation
+
 
 def convert(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1 \2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1 \2', s1)
-
-
-def concepts(entrypoint):
-    """Generates concepts data"""
-
-    if entrypoint == "none":
-        data = []
-        for concept in tax.semantic.get_all_concepts(details=True):
-            details = tax.semantic.get_concept_details(concept)
-            if not details.abstract:
-                t = "SOLAR"
-                if details.id.startswith("us-gaap:"):
-                    t = "US-GAAP"
-                elif details.id.startswith("dei:"):
-                    t = "DEI"
-                data.append({
-                    "name": details.name,
-                    "taxonomy": t,
-                    "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                    "period": details.period_type.value
-                })
-    else:
-        data = []
-        entrypoint_concepts = []
-        for concept in tax.semantic.get_entrypoint_concepts(entrypoint).sort():
-            entrypoint_concepts.append(concept)
-        for concept in tax.semantic.get_all_concepts(details=True).sort():
-            if concept in entrypoint_concepts:
-                details = tax.semantic.get_concept_details(concept)
-                if not details.abstract:
-                    t = "SOLAR"
-                    if details.id.startswith("us-gaap:"):
-                        t = "US-GAAP"
-                    elif details.id.startswith("dei:"):
-                        t = "DEI"
-                    data.append({
-                        "name": details.name,
-                        "taxonomy": t,
-                        "itemtype": details.type_name.split(":")[1].replace("ItemType", ""),
-                        "period": details.period_type.value
-                    })
-
-    return data
 
 
 def units():
@@ -183,91 +181,116 @@ def glossary():
     return data
 
 
-def concept_detail(concept, taxonomy):
-    """Generates concept_detail data"""
+def concepts():
+    """Generates Concepts with detailed data"""
 
-    concept = taxonomy.lower() + ":" + concept
+    # Load US-GAAP documentation which is not currently in oblib.
+    filename = "us-gaap-doc-2017-01-31.xml"
+    usgaap_docs = _TaxonomyDocumentationHandler()
+    parser = xml.sax.make_parser()
+    parser.setContentHandler(usgaap_docs)
+    parser.parse("http://xbrl.fasb.org/us-gaap/2017/elts/us-gaap-doc-2017-01-31.xml")
 
-    details = tax.semantic.get_concept_details(concept)
-    if not details:
-        raise KeyError('Concept {} not found'.format(concept))
+    # Load DEI documentation which is not currently in oblib.
+    filename = "dei-doc-2018-01-31.xml"
+    dei_docs = _TaxonomyDocumentationHandler()
+    parser = xml.sax.make_parser()
+    parser.setContentHandler(dei_docs)
+    parser.parse("https://xbrl.sec.gov/dei/2018/dei-doc-2018-01-31.xml")
 
-    label = convert(details.name)
+    data=[]
+    for concept in tax.semantic.get_all_concepts(details=True):
+        name = concept.split(":")[1]
+        details = tax.semantic.get_concept_details(concept)
+        if not details:
+            raise KeyError('Concept {} not found'.format(concept))
 
-    taxonomy = "SOLAR"
-    if details.id.startswith("us-gaap:"):
-        taxonomy = "US-GAAP"
-    elif details.id.startswith("dei:"):
-        taxonomy = "DEI"
+        if not details.abstract:
+            label = convert(details.name)
 
-    entrypoints = []
-    for entrypoint in tax.semantic.get_all_entrypoints():
-        if entrypoint != "All":
-            if concept in tax.semantic.get_entrypoint_concepts(entrypoint):
-                entrypoints.append(entrypoint)
+            taxonomy = "SOLAR"
+            if details.id.startswith("us-gaap:"):
+                taxonomy = "US-GAAP"
+            elif details.id.startswith("dei:"):
+                taxonomy = "DEI"
 
-    docs = tax.documentation.get_concept_documentation(concept)
-    if docs is None:
-        docs = "None"
+            entrypoints = []
+            for entrypoint in tax.semantic.get_all_entrypoints():
+                if entrypoint != "All":
+                    if concept in tax.semantic.get_entrypoint_concepts(entrypoint):
+                        entrypoints.append(entrypoint)
 
-    item_type = details.type_name.split(":")[1].replace("ItemType", "")
+            docs = "None"
+            if taxonomy == "SOLAR":
+                docs = tax.documentation.get_concept_documentation(concept)
+            elif taxonomy == "US-GAAP":
+                docs = usgaap_docs.docstrings()[name]
+            elif taxonomy == "DEI":
+                docs = dei_docs.docstrings()[name]
+            if docs is None:
+                docs = "None"
 
-    t = reference.TYPES[details.type_name]
-    if t in reference.VALIDATION_RULES:
-        validation_rule = reference.VALIDATION_RULES[t]
-    else:
-        validation_rule = "None"
+            item_type = details.type_name.split(":")[1].replace("ItemType", "")
 
-    if t == "Enumeration":
-        for e in tax.types.get_type_enum(details.type_name):
-            pass
-
-    if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
-        precision_decimals = "Either Precision or Decimals must be specified"
-    else:
-        precision_decimals= "N/A (neither precision nor decimals may be specified)"
-
-    units = tax.get_concept_units(concept)
-    if not units:
-        units = ["N/A (units are not specified)"]
-
-    period = details.period_type.value
-    if period == "instant":
-        period = "Instant in time"
-    else:
-        period = "Period of time"
-    nillable = details.nillable
-
-    calculations = tax.semantic.get_concept_calculation(concept)
-    if len(calculations)==0:
-        calc = ["N/A"]
-    else:
-        calc = []
-        for calculation in calculations:
-            if calculation[1] == 1:
-                sign = "+"
+            t = reference.TYPES[details.type_name]
+            if t in reference.VALIDATION_RULES:
+                validation_rule = reference.VALIDATION_RULES[t]
             else:
-                sign = "-"
-            calc.append(sign + " " + calculation[0])
+                validation_rule = "None"
 
-    usages = tax.semantic.get_concept_calculated_usage(concept)
-    if len(usages) == 0:
-        usages = ["None"]
+            enums = []
+            if t == "Enumeration":
+                for e in tax.types.get_type_enum(details.type_name):
+                    enums.append(e)
 
-    data = {
-        "label": label,
-        "taxonomy": taxonomy,
-        "entrypoints": entrypoints,
-        "description": docs,
-        "type": item_type,
-        "validationRule": validation_rule,
-        "precisionDecimals": precision_decimals,
-        "units": units,
-        "period": period,
-        "nillable": nillable,
-        "calculations": calc,
-        "usages": usages
-    }
+            if details.type_name.startswith("num:") or details.type_name.startswith("num-us:"):
+                precision_decimals = "Either Precision or Decimals must be specified"
+            else:
+                precision_decimals= "N/A (neither precision nor decimals may be specified)"
+
+            units = tax.get_concept_units(concept)
+            if not units:
+                units = ["N/A (units are not specified)"]
+
+            period = details.period_type.value
+            if period == "instant":
+                period = "Instant in time"
+            else:
+                period = "Period of time"
+            nillable = details.nillable
+
+            calculations = tax.semantic.get_concept_calculation(concept)
+            if len(calculations)==0:
+                calc = ["N/A"]
+            else:
+                calc = []
+                for calculation in calculations:
+                    if calculation[1] == 1:
+                        sign = "+"
+                    else:
+                        sign = "-"
+                    calc.append(sign + " " + calculation[0])
+
+            usages = tax.semantic.get_concept_calculated_usage(concept)
+            if len(usages) == 0:
+                usages = ["None"]
+
+            data.append({
+                "name": name,
+                "label": label,
+                "taxonomy": taxonomy,
+                "entrypoints": entrypoints,
+                "description": docs,
+                "type": item_type,
+                "validationRule": validation_rule,
+                "enums": enums,
+                "precisionDecimals": precision_decimals,
+                "units": units,
+                "period": period,
+                "nillable": nillable,
+                "calculations": calc,
+                "usages": usages
+            })
 
     return data
 

@@ -34,7 +34,12 @@
                 </ul>
                 Item Type: {{ apiData.type }}<br/>
                 Validation Rule:  {{ apiData.validationRule }} <br/>
-                    Precision/Decimals: {{ apiData.precisionDecimals }} <br/>
+                <ul>
+                   <li v-for="item in apiData.enums">
+                     {{ item }}
+                   </li>
+                </ul>
+                Precision/Decimals: {{ apiData.precisionDecimals }} <br/>
                 Units:
                 <ul>
                    <li v-for="item in apiData.units">
@@ -87,9 +92,8 @@ h1 {
 }
 
 .public-filter {
-  width: 600px;
-  overflow-wrap: break-word;
-  padding: 5px;
+  overflow-y: scroll;
+  height: 87vh;
 }
 
 button {

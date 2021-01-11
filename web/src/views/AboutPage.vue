@@ -14,11 +14,11 @@
 
 <template>
     <div class="about-container">
-            <hr />
+            <br />
             <div class="about-logo">
                 <img src="@/assets/tv.png" alt="OBTV"/>
             </div>
-            <hr />
+            <br />
             <div class="about-text">
                 <p>
                     Orange Button is an open data exchange standard for the distributed solar PV industry. Comprising
@@ -39,16 +39,10 @@
                     XBRL syntax.
                 </p>
             </div>
-            <hr />
+            <br />
             <div class="about-descriptions">
                 <p>
                     <b>The following screens are available in OBTV:</b>
-                </p>
-                <p>
-                    <b>Entrypoints:</b>
-                    A taxonomy entry point identifies a subset (or "view") of a taxonomy. An entry point contains
-                    a set of concepts (concepts may be present in multiple entrypoints) grouped into Abstracts and
-                    Tables.
                 </p>
                 <p>
                     <b>Concepts:</b>
@@ -57,6 +51,12 @@
                     (concepts that do not have facts) they are not displayed as Concepts in OBTV (use XBRL Desktop
                     Software to display instead) but rather indirectly reflected in the Entrypoint hierarchies in
                     order to simplify concept display for business users.
+                </p>
+                <p>
+                    <b>Entrypoints:</b>
+                    A taxonomy entry point identifies a subset (or "view") of a taxonomy. An entry point contains
+                    a set of concepts (concepts may be present in multiple entrypoints) grouped into Abstracts and
+                    Tables.
                 </p>
                 <p>
                     <b>Types:</b>
@@ -78,16 +78,12 @@
 
 <style scoped>
 .about-container {
-  display: flex;
-  height: 75%;
-  width: 90%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  margin-left: 75px;
+  padding-left: 4em;
+  padding-right: 4em;
 }
 
 .about-logo {
+  text-align: center;
 }
 
 .about-text {

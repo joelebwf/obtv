@@ -28,6 +28,27 @@
                 </label>
             </div>
 
+            <h1>Search Type</h1>
+            <div class="form-group">
+                <label for="name">
+                    <input type="checkbox" id="name" value="Name" v-model="$store.state.chkName"/> Name
+                </label>
+                <label for="description">
+                    <input type="checkbox" id="description" value="Description" v-model="$store.state.chkDescription"/> Description
+                </label>
+                <label for="type">
+                    <input type="checkbox" id="type" value="Type" v-model="$store.state.chkType"/> Type
+                </label>
+                <label for="enumerations">
+                    <input type="checkbox" id="enumerations" value="Enumerations" v-model="$store.state.chkEnumerations"/> Enumerations
+                </label>
+                <label for="unit">
+                    <input type="checkbox" id="unit" value="Unit" v-model="$store.state.chkUnit"/> Unit
+                </label>
+                <label for="all">
+                    <input type="checkbox" id="unit" value="All" @click="selectAll" v-model="$store.state.chkAll"/> All
+                </label>
+            </div>
             <h1>Concept Type</h1>
             <div class="form-group">
                 <label for="solar">
@@ -47,9 +68,6 @@
               <a href @click.prevent="copyLinkToClipboard">Copy to Clipboard</a> or <a :href=filterMailtoLink>Email</a>
             </div>
             <div class="button-group">
-                <button type="button" class="btn btn-primary" @click="updateQuery">
-                    <v-icon name="search" class="search-icon"/>&nbsp; Search
-                </button>
                 <button type="button" class="btn btn-primary" @click="clearFilters">
                     <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
                 </button>
@@ -82,16 +100,17 @@ export default {
     }
   },
   methods: {
-    updateQuery() {
-       // TODO: Remove - currently referenced in other code.
-    },
     clearFilters() {
       this.$store.commit("toggleAPILoading");
       this.$store.state.searchTerm = "";
       this.$store.commit("clearQueryString");
       this.$store.commit("clearConceptsChks");
+      this.$store.commit("resetConceptsTypes");
       this.entryPointSelected = '';
       this.$store.commit("callAPI", "concepts/none");
+    },
+    selectAll() {
+      this.$store.commit("selectAllConceptsTypes")
     },
     getParameterizedURL() {
       let currentURL = window.location.href;
@@ -151,7 +170,7 @@ h1 {
 }
 
 button {
-  margin: 5px;
+  margin: 1px;
   margin-bottom: 15px;
 }
 

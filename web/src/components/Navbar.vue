@@ -14,7 +14,7 @@
 
 <template>
     <nav class="navbar navbar-expand-sm navbar-light navbar-custom">
-        <router-link to="entrypoints" class="navbar-brand">
+        <router-link to="concepts" class="navbar-brand">
             <img id="oblogo" src="@/assets/ob.png" alt="Orange Button"/>
             <h1 class="app-title">Orange Button Taxonomy Viewer</h1>
         </router-link>
@@ -24,10 +24,10 @@
             </li>-->
 
             <li class="nav-item">
-                <router-link :to="{ name: 'entrypoints' }" class="nav-link">Entrypoints</router-link>
+                <router-link :to="{ name: 'concepts' }" class="nav-link">Concepts</router-link>
             </li>
             <li class="nav-item">
-                <router-link :to="{ name: 'concepts' }" class="nav-link">Concepts</router-link>
+                <router-link :to="{ name: 'entrypoints' }" class="nav-link">Entrypoints</router-link>
             </li>
             <li class="nav-item">
                 <router-link :to="{ name: 'types' }" class="nav-link">Types</router-link>

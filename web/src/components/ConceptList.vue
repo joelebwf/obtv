@@ -64,7 +64,7 @@ export default {
           thStyle: { width: "87px" }
         },
         {
-          key: "itemtype",
+          key: "type",
           label: "Item Type",
           thClass: ".col-field-styling",
           thStyle: { width: "87px" }
@@ -99,7 +99,11 @@ export default {
     },
     searchFilter() {
       let tableData = this.$store.state.apiData.filter( node => {
-          return node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) &&
+          return ((node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkName) ||
+            (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkDescription) ||
+            (node.units.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && this.$store.state.chkUnit) ||
+            (node.enums.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && this.$store.state.chkEnumerations) ||
+            (node.type.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())) && this.$store.state.chkType) &&
             ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
              (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||
              (node.taxonomy.toLowerCase()=="dei" && this.$store.state.chkDEI) ||

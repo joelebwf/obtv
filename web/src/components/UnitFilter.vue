@@ -45,9 +45,6 @@
                 </label>
             </div>
             <div class="button-group">
-                <button type="button" class="btn btn-primary" @click="updateQuery">
-                    <v-icon name="search" class="search-icon"/>&nbsp; Search
-                </button>
                 <button type="button" class="btn btn-primary" @click="clearFilters">
                     <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
                 </button>
@@ -59,9 +56,7 @@
 <script>
 export default {
   methods: {
-    updateQuery() {
-       // TODO: Remove - currently referenced in other code.
-    },
+
     clearFilters() {
       this.$store.commit("toggleAPILoading");
       this.$store.state.searchTerm = "";

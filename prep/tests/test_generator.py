@@ -12,52 +12,40 @@
 
 import json
 import unittest
-from viewer import viewer
-from flask_testing import TestCase
-from flask import Flask
+from prep import generator
 
-app = Flask(__name__, static_url_path='', static_folder='dist')
-
-class TestViewer(TestCase):
-
-    def create_app(self):
-        app = Flask(__name__)
-        app.config['TESTING'] = True
-        return app
+class TestViewer(unittest.TestCase):
 
     def test_entrypoints(self):
-        data = json.loads(viewer.entrypoints().data.decode('UTF-8'))
-        # self.assertEqual(162, len(data))
+        data = generator.entrypoints()
+        self.assertEqual(162, len(data))
         self.assertTrue("entrypoint" in data[0])
         self.assertTrue("type" in data[0])
         self.assertTrue("description" in data[0])
 
     def test_site_entrypoint_detail(self):
-        data = json.loads(viewer.entrypoint_detail("Site").data.decode('UTF-8'))
+        data = generator.entrypoint_detail("Site")
         self.assertIsNotNone(data)
 
     def test_concepts(self):
-
-        app = Flask(__name__)
-        app.config['TESTING'] = True
-        data = json.loads(viewer.concepts("none").data.decode('UTF-8'))
-        # self.assertEqual(3402, len(data))
+        data = generator.concepts()
+        self.assertEqual(3402, len(data))
         self.assertTrue("name" in data[0])
         self.assertTrue("taxonomy" in data[0])
-        self.assertTrue("itemtype" in data[0])
+        self.assertTrue("type" in data[0])
         self.assertTrue("period" in data[0])
 
     def test_types(self):
-        data = json.loads(viewer.types().data.decode('UTF-8'))
-        # self.assertEqual(92, len(data))
+        data = generator.types()
+        self.assertEqual(92, len(data))
         self.assertTrue("code" in data[0])
         self.assertTrue("type" in data[0])
         self.assertTrue("values" in data[0])
         self.assertTrue("definition" in data[0])
 
     def test_units(self):
-        data = json.loads(viewer.units().data.decode('UTF-8'))
-        # self.assertEqual(296, len(data))
+        data = generator.units()
+        self.assertEqual(296, len(data))
         self.assertTrue("id" in data[0])
         self.assertTrue("name" in data[0])
         self.assertTrue("symbol" in data[0])
@@ -66,8 +54,8 @@ class TestViewer(TestCase):
         self.assertTrue("definition" in data[0])
 
     def test_glossary(self):
-        data = json.loads(viewer.glossary().data.decode('UTF-8'))
-        # self.assertEqual(308, len(data))
+        data = generator.glossary()
+        self.assertEqual(308, len(data))
         self.assertTrue("type" in data[0])
         self.assertTrue("code" in data[0])
         self.assertTrue("definition" in data[0])

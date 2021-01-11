@@ -56,9 +56,7 @@
 <script>
 export default {
   methods: {
-    updateQuery() {
-       // TODO: Remove - currently referenced in other code.
-    },
+
     clearFilters() {
       this.$store.commit("toggleAPILoading");
       this.$store.state.searchTerm = "";

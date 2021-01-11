@@ -64,6 +64,8 @@
                   <h1>Select entrypoint:</h1>
                   <b-form-select id="entryPointSelector" v-model="entryPointSelected" :options="$store.state.entryPointList" />
                 </label>
+              Selected Entrypoint Link: <br>
+              <a href @click.prevent="copyLinkToClipboard">Copy to Clipboard</a> or <a :href=filterMailtoLink>Email</a>
             </div>
             <div class="button-group">
                 <button type="button" class="btn btn-primary" @click="clearFilters">
@@ -84,7 +86,18 @@ export default {
     }
   },
   beforeCreate() {
-      this.$store.commit("callAPIentrypoints");
+    this.$store.commit("callAPIentrypoints");
+  },
+  created() {
+    // if query params, create cookie
+    // query param form = ?views=
+    if (Object.keys(this.$route.query).length !== 0) {
+      let givenEntryPoint = this.$route.query['views'];
+      if (this.$store.state.entryPointList.includes(givenEntryPoint)) {
+        // setting entryPointSelected triggers the watch for it below, updating the data list
+        this.entryPointSelected = givenEntryPoint;
+      }
+    }
   },
   methods: {
     clearFilters() {
@@ -98,6 +111,23 @@ export default {
     },
     selectAll() {
       this.$store.commit("selectAllConceptsTypes")
+    },
+    getParameterizedURL() {
+      let currentURL = window.location.href;
+      if (currentURL.indexOf("?") > 0) {
+        currentURL = currentURL.substring(0, currentURL.indexOf("?"));
+      }
+      return currentURL + "?views=" + this.entryPointSelected;
+    },
+    copyLinkToClipboard() {
+      navigator.clipboard.writeText(this.getParameterizedURL())
+        .then(() => { /* success */ })
+        .catch(() => { /* failed */ });
+    }
+  },
+  computed: {
+    filterMailtoLink: function() {
+      return "mailto:?body=" + this.getParameterizedURL();
     }
   },
   watch: {
@@ -175,9 +205,4 @@ label {
   margin-top: 3px;
   margin-bottom: 3px;
 }
-
-#keyword_search {
-  width: 214px;
-}
-
 </style>

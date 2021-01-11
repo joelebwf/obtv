@@ -128,9 +128,4 @@ label {
   margin-top: 3px;
   margin-bottom: 3px;
 }
-
-#keyword_search {
-  width: 214px;
-}
-
 </style>

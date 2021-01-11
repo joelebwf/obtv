@@ -66,9 +66,6 @@
                 </label>
             </div>
             <div class="button-group">
-                <button type="button" class="btn btn-primary" @click="updateQuery">
-                    <v-icon name="check" class="clear-icon"/> Reset Type
-                </button>
                 <button type="button" class="btn btn-primary" @click="clearFilters">
                     <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
                 </button>
@@ -90,16 +87,12 @@ export default {
       this.$store.commit("callAPIentrypoints");
   },
   methods: {
-    updateQuery() {
-      this.$store.commit("toggleAPILoading");
-      this.$store.commit("resetConceptsTypes");
-      this.$store.commit("callAPI", "concepts/none");
-    },
     clearFilters() {
       this.$store.commit("toggleAPILoading");
       this.$store.state.searchTerm = "";
       this.$store.commit("clearQueryString");
       this.$store.commit("clearConceptsChks");
+      this.$store.commit("resetConceptsTypes");
       this.entryPointSelected = '';
       this.$store.commit("callAPI", "concepts/none");
     },

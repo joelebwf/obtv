@@ -44,9 +44,6 @@
                 </label>
             </div>
             <div class="button-group">
-                <button type="button" class="btn btn-primary" @click="updateQuery">
-                    <v-icon name="search" class="search-icon"/>&nbsp; Search
-                </button>
                 <button type="button" class="btn btn-primary" @click="clearFilters">
                     <v-icon name="times" class="clear-icon"/>&nbsp;&nbsp;Clear filters
                 </button>

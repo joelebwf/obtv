@@ -27,10 +27,11 @@ entrypoints = data
 with open("../web/resources/entrypoints-details.json", "w") as outfile:
     data = {}
     for entrypoint in entrypoints:
-        try:
-            data[entrypoint["entrypoint"]] = generator.entrypoint_detail(entrypoint["entrypoint"])
-        except:
-            pass
+        if entrypoint["entrypoint"] not in ["All", "UML", "solar"]:
+            try:
+                data[entrypoint["entrypoint"]] = generator.entrypoint_detail(entrypoint["entrypoint"])
+            except:
+                pass
     outfile.write(json.dumps(data))
 
 with open("../web/resources/entrypoints-concepts.json", "w") as outfile:

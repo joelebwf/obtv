@@ -53,6 +53,7 @@ export default new Vuex.Store({
     chkEnumerations: false,
     chkUnit: false,
     chkAll: false,
+    actvChk: true,
 
     chkSolar: false,
     chkUSGaap: false,
@@ -203,21 +204,6 @@ export default new Vuex.Store({
       state.chkType = false;
       state.chkEnumerations = false;
       state.chkUnit = false;
-    },
-    selectAllConceptsTypes(state) {
-      if (!state.chkAll) {
-        state.chkName = true;
-        state.chkDescription = true;
-        state.chkType = true;
-        state.chkEnumerations = true;
-        state.chkUnit = true;
-      } else {
-        state.chkName = true;
-        state.chkDescription = false;
-        state.chkType = false;
-        state.chkEnumerations = false;
-        state.chkUnit = false;
-      }
     },
     clearConceptsChks(state) {
       state.chkSolar = false;

@@ -99,17 +99,20 @@ export default {
     },
     searchFilter() {
       let tableData = this.$store.state.apiData.filter( node => {
-          return ((node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkName) ||
-            (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && this.$store.state.chkDescription) ||
-            (node.units.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && this.$store.state.chkUnit) ||
-            (node.enums.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && this.$store.state.chkEnumerations) ||
-            (node.type.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())) && this.$store.state.chkType) &&
-            ((node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
-             (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||
-             (node.taxonomy.toLowerCase()=="dei" && this.$store.state.chkDEI) ||
-             (node.taxonomy.toLowerCase()=="solar" && !this.$store.state.actvChk) ||
-             (node.taxonomy.toLowerCase()=="us-gaap" && !this.$store.state.actvChk) ||
-             (node.taxonomy.toLowerCase()=="dei" && !this.$store.state.actvChk))
+          return (
+                (node.name.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && (this.$store.state.chkName || this.allOff())) ||
+                (node.description.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && (this.$store.state.chkDescription || this.allOff())) ||
+                (node.units.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && (this.$store.state.chkUnit || this.allOff())) ||
+                (node.enums.filter((s) => s.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase())).length>0 && (this.$store.state.chkEnumerations || this.allOff())) ||
+                (node.type.toLowerCase().includes(this.$store.state.searchTerm.toLowerCase()) && (this.$store.state.chkType || this.allOff()))
+             ) && (
+                (node.taxonomy.toLowerCase()=="solar" && this.$store.state.chkSolar) ||
+                (node.taxonomy.toLowerCase()=="us-gaap" && this.$store.state.chkUSGaap) ||
+                (node.taxonomy.toLowerCase()=="dei" && this.$store.state.chkDEI) ||
+                (node.taxonomy.toLowerCase()=="solar" && !this.$store.state.actvChk) ||
+                (node.taxonomy.toLowerCase()=="us-gaap" && !this.$store.state.actvChk) ||
+                (node.taxonomy.toLowerCase()=="dei" && !this.$store.state.actvChk)
+             )
       });
       this.$store.state.returnItemsCount = tableData.length;
       
@@ -134,6 +137,13 @@ export default {
       } else {
         this.showLoadMore = true
       }
+    },
+    allOff() {
+      return !this.$store.state.chkName &&
+        !this.$store.state.chkDescription &&
+        !this.$store.state.chkUnit &&
+        !this.$store.state.chkEnumerations &&
+        !this.$store.state.chkType;
     }
   },
   watch: {
@@ -143,6 +153,13 @@ export default {
         this.showLoadMore = false
       } else {
         this.showLoadMore = true
+      }
+    },
+    "$store.state.chkSolar"() {
+      if (this.$store.state.chkSolar) {
+        this.$store.state.actv2Chk = true
+      } else {
+        this.$store.state.actv2Chk = false
       }
     },
     "$store.state.chkSolar"() {

@@ -141,21 +141,22 @@ def entrypoints():
     data = []
     entrypoints, entrypoints_details = tax.semantic.get_all_entrypoints(details=True)
     for entrypoint in entrypoints:
-        if entrypoint in entrypoints_details:
-            data.append({
-                "entrypoint": entrypoints_details[entrypoint].name,
-                "type": entrypoints_details[entrypoint].entrypoint_type.value,
-                "description": reference.ENTRYPOINTS_DESCRIPTION[entrypoint]
-            })
-        else:
-            description = ""
-            if entrypoint in reference.ENTRYPOINTS_DESCRIPTION:
-                description = reference.ENTRYPOINTS_DESCRIPTION[entrypoint]
-            data.append({
-                "entrypoint": entrypoint,
-                "type": "Documents",
-                "description": description
-            })
+        if entrypoint not in ["All", "UML", "solar"]:
+            if entrypoint in entrypoints_details:
+                data.append({
+                    "entrypoint": entrypoints_details[entrypoint].name,
+                    "type": entrypoints_details[entrypoint].entrypoint_type.value,
+                    "description": reference.ENTRYPOINTS_DESCRIPTION[entrypoint]
+                })
+            else:
+                description = ""
+                if entrypoint in reference.ENTRYPOINTS_DESCRIPTION:
+                    description = reference.ENTRYPOINTS_DESCRIPTION[entrypoint]
+                data.append({
+                    "entrypoint": entrypoint,
+                    "type": "Documents",
+                    "description": description
+                })
 
     return sorted(data, key=lambda x: x["entrypoint"])
 

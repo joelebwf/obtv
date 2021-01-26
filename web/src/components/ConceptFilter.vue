@@ -23,7 +23,6 @@
                             class="form-control"
                             id="keyword_search"
                             v-model="$store.state.searchTerm"
-                            @keyup.enter="updateQuery"
                     />
                 </label>
             </div>
@@ -44,9 +43,6 @@
                 </label>
                 <label for="unit">
                     <input type="checkbox" id="unit" value="Unit" v-model="$store.state.chkUnit"/> Unit
-                </label>
-                <label for="all">
-                    <input type="checkbox" id="unit" value="All" @click="selectAll" v-model="$store.state.chkAll"/> All
                 </label>
             </div>
             <h1>Concept Type</h1>
